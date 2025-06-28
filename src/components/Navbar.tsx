@@ -13,18 +13,18 @@ const Navbar = ({ language, onLanguageToggle }: NavbarProps) => {
   const { t } = useI18n();
 
   return (
-    <nav className="bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-200 sticky top-0 z-50">
+    <nav className="bg-[hsl(var(--navbar-bg))]/80 backdrop-blur-md shadow-sm border-b border-[hsl(var(--navbar-border))] sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg">
+            <div className="p-2 bg-gradient-to-r from-[hsl(var(--gradient-primary))] to-[hsl(var(--gradient-secondary))] rounded-lg">
               <BarChart3 className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-gray-800">
+              <h1 className="text-xl font-bold text-[hsl(var(--navbar-text))]">
                 {t('appTitle')}
               </h1>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-[hsl(var(--muted-foreground))]">
                 {t('appSubtitle')}
               </p>
             </div>
@@ -34,7 +34,7 @@ const Navbar = ({ language, onLanguageToggle }: NavbarProps) => {
             variant="outline"
             size="sm"
             onClick={onLanguageToggle}
-            className="flex items-center gap-2 hover:bg-gray-50 transition-colors"
+            className="flex items-center gap-2 hover:bg-[hsl(var(--accent))] transition-colors"
           >
             <Globe className="w-4 h-4" />
             {t('languageToggle')}
