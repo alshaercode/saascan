@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, BarChart3, Globe, Save, Trash2, Download } from 'lucide-react';
+import { ArrowRight, Lightbulb, Globe, Download, Trash2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,7 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import AnalysisTable from "@/components/AnalysisTable";
+import SaasAnalysisTable from "@/components/SaasAnalysisTable";
+import GitHubStar from "@/components/GitHubStar";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useI18n } from "@/hooks/useI18n";
 import { analyzeUX, AnalysisResult } from "@/lib/uxAnalyzer";
@@ -23,16 +24,11 @@ const Index = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Load existing results from localStorage on component mount
     const savedResults = loadFromLocalStorage();
     if (savedResults.length > 0) {
       setResults(savedResults);
-      toast({
-        title: t.dataRestored,
-        description: t.dataRestoredDesc.replace('{count}', savedResults.length.toString()),
-      });
     }
-  }, [t]);
+  }, []);
 
   const handleAnalyze = async () => {
     if (!input.trim()) {
@@ -47,7 +43,6 @@ const Index = () => {
     setIsAnalyzing(true);
     
     try {
-      // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       const analysis = analyzeUX(input, language);
@@ -87,7 +82,7 @@ const Index = () => {
     const url = URL.createObjectURL(dataBlob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `ux-analysis-${new Date().toISOString().split('T')[0]}.json`;
+    link.download = `saas-analysis-${new Date().toISOString().split('T')[0]}.json`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -105,35 +100,40 @@ const Index = () => {
       
       <main className="container mx-auto px-4 py-8 space-y-8">
         {/* Hero Section */}
-        <div className="text-center space-y-4 py-12">
+        <div className="text-center space-y-6 py-12">
           <div className="flex justify-center mb-6">
             <div className="p-3 bg-gradient-to-r from-[hsl(var(--gradient-primary))] to-[hsl(var(--gradient-secondary))] rounded-full">
-              <BarChart3 className="w-8 h-8 text-white" />
+              <Lightbulb className="w-8 h-8 text-white" />
             </div>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-[hsl(var(--gradient-primary))] to-[hsl(var(--gradient-secondary))] bg-clip-text text-transparent">
+          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-[hsl(var(--gradient-primary))] to-[hsl(var(--gradient-secondary))] bg-clip-text text-transparent">
             {t.title}
           </h1>
-          <p className="text-xl text-[hsl(var(--muted-foreground))] max-w-2xl mx-auto">
+          <p className="text-xl md:text-2xl text-[hsl(var(--muted-foreground))] max-w-3xl mx-auto leading-relaxed">
             {t.subtitle}
           </p>
+        </div>
+
+        {/* GitHub Star Section */}
+        <div className="max-w-4xl mx-auto">
+          <GitHubStar />
         </div>
 
         {/* Input Section */}
         <Card className="mx-auto max-w-4xl shadow-lg border-0 bg-[hsl(var(--card-bg))]/70 backdrop-blur-sm">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-xl">
               <Globe className="w-5 h-5" />
               {t.inputTitle}
             </CardTitle>
-            <CardDescription>{t.inputDescription}</CardDescription>
+            <CardDescription className="text-base">{t.inputDescription}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <Textarea
               placeholder={t.inputPlaceholder}
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              className="min-h-32 text-base border-2 focus:border-[hsl(var(--input-focus))] transition-colors"
+              className="min-h-40 text-base border-2 focus:border-[hsl(var(--input-focus))] transition-colors resize-none"
               disabled={isAnalyzing}
             />
             <div className="flex justify-between items-center">
@@ -143,7 +143,8 @@ const Index = () => {
               <Button 
                 onClick={handleAnalyze}
                 disabled={isAnalyzing || !input.trim()}
-                className="bg-gradient-to-r from-[hsl(var(--gradient-primary))] to-[hsl(var(--gradient-secondary))] hover:from-[hsl(var(--gradient-primary))]/90 hover:to-[hsl(var(--gradient-secondary))]/90 text-white px-6 py-2 rounded-full transition-all duration-300 transform hover:scale-105"
+                size="lg"
+                className="bg-gradient-to-r from-[hsl(var(--gradient-primary))] to-[hsl(var(--gradient-secondary))] hover:from-[hsl(var(--gradient-primary))]/90 hover:to-[hsl(var(--gradient-secondary))]/90 text-white px-8 py-3 rounded-full transition-all duration-300 transform hover:scale-105"
               >
                 {isAnalyzing ? (
                   <div className="flex items-center gap-2">
@@ -165,7 +166,7 @@ const Index = () => {
         {results.length > 0 && (
           <div className="space-y-6">
             <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-semibold text-[hsl(var(--navbar-text))]">{t.resultsTitle}</h2>
+              <h2 className="text-3xl font-bold text-[hsl(var(--navbar-text))]">{t.resultsTitle}</h2>
               <div className="flex gap-2">
                 <Button 
                   variant="outline" 
@@ -185,17 +186,17 @@ const Index = () => {
                 </Button>
               </div>
             </div>
-            <AnalysisTable results={results} language={language} />
+            <SaasAnalysisTable results={results} language={language} />
           </div>
         )}
 
         {/* Empty State */}
         {results.length === 0 && !isAnalyzing && (
-          <Card className="mx-auto max-w-2xl text-center py-12 border-dashed border-2 border-[hsl(var(--border))]">
+          <Card className="mx-auto max-w-2xl text-center py-16 border-dashed border-2 border-[hsl(var(--border))]">
             <CardContent>
-              <BarChart3 className="w-16 h-16 text-[hsl(var(--muted-foreground))] mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-[hsl(var(--muted-foreground))] mb-2">{t.noResults}</h3>
-              <p className="text-[hsl(var(--muted-foreground))]">{t.noResultsDesc}</p>
+              <Lightbulb className="w-16 h-16 text-[hsl(var(--muted-foreground))] mx-auto mb-4" />
+              <h3 className="text-2xl font-semibold text-[hsl(var(--muted-foreground))] mb-2">{t.noResults}</h3>
+              <p className="text-[hsl(var(--muted-foreground))] text-lg">{t.noResultsDesc}</p>
             </CardContent>
           </Card>
         )}

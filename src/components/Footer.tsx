@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Heart, Code, Globe } from 'lucide-react';
+import { Heart, Code, Lightbulb } from 'lucide-react';
 import { useI18n } from '@/hooks/useI18n';
 
 const Footer = () => {
@@ -13,7 +13,7 @@ const Footer = () => {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <div className="p-2 bg-gradient-to-r from-[hsl(var(--gradient-primary))] to-[hsl(var(--gradient-secondary))] rounded-lg">
-                <Globe className="w-5 h-5 text-white" />
+                <Lightbulb className="w-5 h-5 text-white" />
               </div>
               <h3 className="text-lg font-semibold">{t('appTitle')}</h3>
             </div>
@@ -43,7 +43,7 @@ const Footer = () => {
         
         <div className="border-t border-[hsl(var(--footer-text-secondary))]/20 mt-8 pt-8 text-center">
           <p className="flex items-center justify-center gap-1 text-sm text-[hsl(var(--footer-text-secondary))]">
-            {t('footerMadeWith')} <Heart className="w-4 h-4 text-red-500" /> {t('footerAnd')} <Code className="w-4 h-4 text-[hsl(var(--gradient-primary))]" /> {t('footerForBetterUX')}
+            {t('footerMadeWith')} <Heart className="w-4 h-4 text-red-500" /> {t('footerAnd')} <Code className="w-4 h-4 text-[hsl(var(--gradient-primary))]" /> {t('footerForBetterSaas')}
           </p>
         </div>
       </div>
