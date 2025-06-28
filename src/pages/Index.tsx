@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SaasAnalysisTable from "@/components/SaasAnalysisTable";
+import GitHubStar from "@/components/GitHubStar";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useI18n } from "@/hooks/useI18n";
 import { analyzeUX, AnalysisResult } from "@/lib/uxAnalyzer";
@@ -94,7 +95,7 @@ const Index = () => {
   };
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br from-[hsl(var(--hero-gradient-start))] via-[hsl(var(--background))] to-[hsl(var(--hero-gradient-end))] ${language === 'ar' ? 'rtl font-arabic' : 'ltr font-english'}`}>
+    <div className={`min-h-screen bg-gradient-to-br from-[hsl(var(--hero-gradient-start))] via-[hsl(var(--background))] to-[hsl(var(--hero-gradient-end))] ${language === 'ar' ? 'rtl' : 'ltr'}`}>
       <Navbar language={language} onLanguageToggle={toggleLanguage} />
       
       <main className="container mx-auto px-4 py-8 space-y-8">
@@ -111,6 +112,11 @@ const Index = () => {
           <p className="text-xl md:text-2xl text-[hsl(var(--muted-foreground))] max-w-3xl mx-auto leading-relaxed">
             {t.subtitle}
           </p>
+        </div>
+
+        {/* GitHub Star Section */}
+        <div className="max-w-4xl mx-auto">
+          <GitHubStar />
         </div>
 
         {/* Input Section */}

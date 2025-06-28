@@ -38,14 +38,14 @@ const SaasAnalysisTable = ({ results, language }: SaasAnalysisTableProps) => {
   };
 
   return (
-    <div className={`space-y-6 ${language === 'ar' ? 'font-arabic' : 'font-english'}`}>
+    <div className="space-y-6">
       {results.map((result, index) => (
         <Card key={result.id} className="overflow-hidden shadow-lg border-0 bg-[hsl(var(--card-bg))]/70 backdrop-blur-sm">
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Lightbulb className="w-5 h-5" />
-                {t('saasAnalysis')}
+                {t('analysisNumber', { number: (results.length - index).toString() })}
               </div>
               <Badge variant="secondary" className="text-xs">
                 {formatDate(result.timestamp)}
@@ -119,18 +119,18 @@ const SaasAnalysisTable = ({ results, language }: SaasAnalysisTableProps) => {
 
             {/* Detailed Analysis Table */}
             <div>
-              <h4 className="font-semibold text-[hsl(var(--navbar-text))] mb-3">{t('detailedAnalysis')}</h4>
+              <h4 className="font-semibold text-[hsl(var(--navbar-text))] mb-3">Detailed Analysis</h4>
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>{t('aspect')}</TableHead>
-                    <TableHead>{t('assessment')}</TableHead>
-                    <TableHead className="text-right">{t('score')}</TableHead>
+                    <TableHead>Aspect</TableHead>
+                    <TableHead>Assessment</TableHead>
+                    <TableHead className="text-right">Score</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   <TableRow>
-                    <TableCell className="font-medium">{t('marketOpportunity')}</TableCell>
+                    <TableCell className="font-medium">Market Opportunity</TableCell>
                     <TableCell className="text-sm text-[hsl(var(--muted-foreground))]">
                       {result.recommendations[0] || 'Strong potential in target market'}
                     </TableCell>
@@ -141,7 +141,7 @@ const SaasAnalysisTable = ({ results, language }: SaasAnalysisTableProps) => {
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell className="font-medium">{t('technicalFeasibility')}</TableCell>
+                    <TableCell className="font-medium">Technical Feasibility</TableCell>
                     <TableCell className="text-sm text-[hsl(var(--muted-foreground))]">
                       {result.issues[0] || 'Good technical foundation required'}
                     </TableCell>
@@ -152,7 +152,7 @@ const SaasAnalysisTable = ({ results, language }: SaasAnalysisTableProps) => {
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell className="font-medium">{t('competitiveAdvantage')}</TableCell>
+                    <TableCell className="font-medium">Competitive Advantage</TableCell>
                     <TableCell className="text-sm text-[hsl(var(--muted-foreground))]">
                       {result.recommendations[1] || 'Unique value proposition needed'}
                     </TableCell>
