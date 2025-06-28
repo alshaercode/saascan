@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Calendar, Target, TrendingUp, AlertTriangle, CheckCircle } from 'lucide-react';
 import { AnalysisResult } from '@/lib/uxAnalyzer';
+import { useI18n } from '@/hooks/useI18n';
 
 interface AnalysisTableProps {
   results: AnalysisResult[];
@@ -11,6 +12,8 @@ interface AnalysisTableProps {
 }
 
 const AnalysisTable = ({ results, language }: AnalysisTableProps) => {
+  const { t } = useI18n();
+
   const formatDate = (date: string) => {
     return new Date(date).toLocaleDateString(language === 'ar' ? 'ar-SA' : 'en-US', {
       year: 'numeric',
@@ -43,7 +46,7 @@ const AnalysisTable = ({ results, language }: AnalysisTableProps) => {
               <div className="lg:col-span-2">
                 <h3 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
                   <Target className="w-4 h-4" />
-                  {language === 'en' ? 'Input Text' : 'النص المدخل'}
+                  {t('inputText')}
                 </h3>
                 <p className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg leading-relaxed">
                   {result.input.length > 200 ? `${result.input.substring(0, 200)}...` : result.input}
@@ -54,7 +57,7 @@ const AnalysisTable = ({ results, language }: AnalysisTableProps) => {
               <div>
                 <h3 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
                   <TrendingUp className="w-4 h-4" />
-                  {language === 'en' ? 'UX Score' : 'درجة تجربة المستخدم'}
+                  {t('uxScore')}
                 </h3>
                 <div className={`flex items-center gap-2 p-3 rounded-lg font-bold text-2xl ${getScoreColor(result.score)}`}>
                   {getScoreIcon(result.score)}
@@ -66,13 +69,13 @@ const AnalysisTable = ({ results, language }: AnalysisTableProps) => {
               <div>
                 <h3 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
                   <Calendar className="w-4 h-4" />
-                  {language === 'en' ? 'Analysis Date' : 'تاريخ التحليل'}
+                  {t('analysisDate')}
                 </h3>
                 <p className="text-sm text-gray-600 mb-3">
                   {formatDate(result.timestamp)}
                 </p>
                 <Badge variant="secondary" className="text-xs">
-                  {language === 'en' ? `Analysis #${results.length - index}` : `تحليل رقم ${results.length - index}`}
+                  {t('analysisNumber', { number: (results.length - index).toString() })}
                 </Badge>
               </div>
             </div>
@@ -82,7 +85,7 @@ const AnalysisTable = ({ results, language }: AnalysisTableProps) => {
               <div>
                 <h4 className="font-semibold text-red-600 mb-3 flex items-center gap-2">
                   <AlertTriangle className="w-4 h-4" />
-                  {language === 'en' ? 'Issues Found' : 'المشاكل المكتشفة'}
+                  {t('issuesFound')}
                 </h4>
                 <ul className="space-y-2 text-sm">
                   {result.issues.map((issue, idx) => (
@@ -97,7 +100,7 @@ const AnalysisTable = ({ results, language }: AnalysisTableProps) => {
               <div>
                 <h4 className="font-semibold text-green-600 mb-3 flex items-center gap-2">
                   <CheckCircle className="w-4 h-4" />
-                  {language === 'en' ? 'Recommendations' : 'التوصيات'}
+                  {t('recommendations')}
                 </h4>
                 <ul className="space-y-2 text-sm">
                   {result.recommendations.map((rec, idx) => (

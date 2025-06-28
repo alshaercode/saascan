@@ -2,6 +2,7 @@
 import React from 'react';
 import { Globe, BarChart3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useI18n } from '@/hooks/useI18n';
 
 interface NavbarProps {
   language: 'en' | 'ar';
@@ -9,6 +10,8 @@ interface NavbarProps {
 }
 
 const Navbar = ({ language, onLanguageToggle }: NavbarProps) => {
+  const { t } = useI18n();
+
   return (
     <nav className="bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-200 sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
@@ -19,10 +22,10 @@ const Navbar = ({ language, onLanguageToggle }: NavbarProps) => {
             </div>
             <div>
               <h1 className="text-xl font-bold text-gray-800">
-                {language === 'en' ? 'UX Analyzer' : 'محلل تجربة المستخدم'}
+                {t('appTitle')}
               </h1>
               <p className="text-sm text-gray-600">
-                {language === 'en' ? 'Mindful UX Analysis' : 'تحليل تجربة المستخدم الذكي'}
+                {t('appSubtitle')}
               </p>
             </div>
           </div>
@@ -34,7 +37,7 @@ const Navbar = ({ language, onLanguageToggle }: NavbarProps) => {
             className="flex items-center gap-2 hover:bg-gray-50 transition-colors"
           >
             <Globe className="w-4 h-4" />
-            {language === 'en' ? 'العربية' : 'English'}
+            {t('languageToggle')}
           </Button>
         </div>
       </div>

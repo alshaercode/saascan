@@ -10,6 +10,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import AnalysisTable from "@/components/AnalysisTable";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useI18n } from "@/hooks/useI18n";
 import { analyzeUX, AnalysisResult } from "@/lib/uxAnalyzer";
 import { saveToLocalStorage, loadFromLocalStorage } from "@/lib/storage";
 
@@ -18,6 +19,7 @@ const Index = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [results, setResults] = useState<AnalysisResult[]>([]);
   const { t, language, toggleLanguage } = useLanguage();
+  const { t: translate } = useI18n();
   const { toast } = useToast();
 
   useEffect(() => {
