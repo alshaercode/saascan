@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 
 type Language = 'en' | 'ar';
@@ -43,7 +44,6 @@ export const useI18n = () => {
     const newLanguage = language === 'en' ? 'ar' : 'en';
     setLanguage(newLanguage);
     localStorage.setItem('ux-analyzer-language', newLanguage);
-    // Removed toast notification for silent language switching
   };
 
   const t = (key: string, replacements?: Record<string, string>): string => {
