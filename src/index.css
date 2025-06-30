@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -141,6 +142,7 @@ All colors MUST be HSL.
 @layer base {
   * {
     @apply border-border;
+    font-family: "Noto Kufi Arabic", sans-serif;
   }
 
   body {
@@ -154,13 +156,19 @@ All colors MUST be HSL.
     background-size: 200% 200%;
     animation: gradient 3s ease infinite;
   }
-  
+
   @keyframes gradient {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
   }
-  
+
   .glass-effect {
     backdrop-filter: blur(12px);
     background: rgba(255, 255, 255, 0.1);

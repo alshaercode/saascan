@@ -1,4 +1,3 @@
-
 {
   "title": "SaaS Idea Analyzer",
   "subtitle": "Instantly analyze your SaaS idea and get structured insights to help you refine your vision",
@@ -42,6 +41,8 @@
   "footerForBetterSaas": "for better SaaS",
   "githubStar": "Star on GitHub",
   "githubStarDesc": "Help us grow by starring this project",
+  "showHistory": "Show History",
+  "backHome": "Back Home",
   "features": {
     "realTimeAnalysis": "Real-time SaaS Analysis",
     "multiLanguageSupport": "Multi-language Support",
@@ -51,5 +52,10 @@
   "languages": {
     "english": "English",
     "arabic": "العربية"
+  },
+  "badges": {
+    "instantAnalysis": "⚡ Instant Analysis",
+    "marketInsights": "🎯 Market Insights",
+    "detailedReports": "📊 Detailed Reports"
   }
 }

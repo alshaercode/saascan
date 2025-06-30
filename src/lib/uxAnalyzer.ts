@@ -1,4 +1,3 @@
-
 export interface AnalysisResult {
   id: string;
   input: string;
@@ -6,7 +5,7 @@ export interface AnalysisResult {
   issues: string[];
   recommendations: string[];
   timestamp: string;
-  language: 'en' | 'ar';
+  language: "en" | "ar";
 }
 
 const generateAnalysisId = () => {
@@ -24,7 +23,7 @@ const sampleIssues = {
     "Long loading times may impact user experience",
     "Unclear error messages and validation",
     "Inconsistent design patterns across pages",
-    "Accessibility concerns for screen readers"
+    "Accessibility concerns for screen readers",
   ],
   ar: [
     "هيكل التنقل المعقد قد يربك المستخدمين",
@@ -36,8 +35,8 @@ const sampleIssues = {
     "أوقات التحميل الطويلة قد تؤثر على تجربة المستخدم",
     "رسائل خطأ غير واضحة والتحقق من الصحة",
     "أنماط تصميم غير متسقة عبر الصفحات",
-    "مخاوف إمكانية الوصول لقارئات الشاشة"
-  ]
+    "مخاوف إمكانية الوصول لقارئات الشاشة",
+  ],
 };
 
 const sampleRecommendations = {
@@ -51,7 +50,7 @@ const sampleRecommendations = {
     "Implement progressive loading and performance optimization",
     "Write clear, actionable error messages",
     "Establish consistent design system and style guide",
-    "Add ARIA labels and improve semantic HTML structure"
+    "Add ARIA labels and improve semantic HTML structure",
   ],
   ar: [
     "تبسيط التنقل بفئات قائمة واضحة",
@@ -63,34 +62,56 @@ const sampleRecommendations = {
     "تنفيذ التحميل التدريجي وتحسين الأداء",
     "كتابة رسائل خطأ واضحة وقابلة للتنفيذ",
     "إنشاء نظام تصميم متسق ودليل أسلوب",
-    "إضافة تسميات ARIA وتحسين هيكل HTML الدلالي"
-  ]
+    "إضافة تسميات ARIA وتحسين هيكل HTML الدلالي",
+  ],
 };
 
-export const analyzeUX = (input: string, language: 'en' | 'ar'): AnalysisResult => {
+export const analyzeUX = (
+  input: string,
+  language: "en" | "ar"
+): AnalysisResult => {
   // Simulate AI analysis with realistic scoring
   const wordCount = input.trim().split(/\s+/).length;
   const complexityScore = Math.min(wordCount / 10, 10); // More words = more complexity
-  
+
   // Base score calculation (simulated AI logic)
   let baseScore = 85;
-  
+
   // Adjust score based on input content (simple keyword analysis)
-  const problemKeywords = language === 'en' 
-    ? ['problem', 'issue', 'difficult', 'confusing', 'abandon', 'error', 'slow', 'broken']
-    : ['مشكلة', 'صعوبة', 'مربك', 'هجر', 'خطأ', 'بطيء', 'معطل'];
-    
-  const positiveKeywords = language === 'en'
-    ? ['good', 'easy', 'clear', 'simple', 'fast', 'intuitive', 'user-friendly']
-    : ['جيد', 'سهل', 'واضح', 'بسيط', 'سريع', 'بديهي', 'سهل الاستخدام'];
+  const problemKeywords =
+    language === "en"
+      ? [
+          "problem",
+          "issue",
+          "difficult",
+          "confusing",
+          "abandon",
+          "error",
+          "slow",
+          "broken",
+        ]
+      : ["مشكلة", "صعوبة", "مربك", "هجر", "خطأ", "بطيء", "معطل"];
+
+  const positiveKeywords =
+    language === "en"
+      ? [
+          "good",
+          "easy",
+          "clear",
+          "simple",
+          "fast",
+          "intuitive",
+          "user-friendly",
+        ]
+      : ["جيد", "سهل", "واضح", "بسيط", "سريع", "بديهي", "سهل الاستخدام"];
 
   const lowerInput = input.toLowerCase();
-  
-  problemKeywords.forEach(keyword => {
+
+  problemKeywords.forEach((keyword) => {
     if (lowerInput.includes(keyword)) baseScore -= 5;
   });
-  
-  positiveKeywords.forEach(keyword => {
+
+  positiveKeywords.forEach((keyword) => {
     if (lowerInput.includes(keyword)) baseScore += 3;
   });
 
@@ -99,12 +120,17 @@ export const analyzeUX = (input: string, language: 'en' | 'ar'): AnalysisResult 
   // Generate random issues and recommendations
   const issuePool = sampleIssues[language];
   const recommendationPool = sampleRecommendations[language];
-  
-  const numIssues = Math.max(2, Math.min(5, Math.floor((100 - finalScore) / 15)));
+
+  const numIssues = Math.max(
+    2,
+    Math.min(5, Math.floor((100 - finalScore) / 15))
+  );
   const numRecommendations = numIssues;
 
   const shuffledIssues = [...issuePool].sort(() => 0.5 - Math.random());
-  const shuffledRecommendations = [...recommendationPool].sort(() => 0.5 - Math.random());
+  const shuffledRecommendations = [...recommendationPool].sort(
+    () => 0.5 - Math.random()
+  );
 
   return {
     id: generateAnalysisId(),
@@ -113,6 +139,6 @@ export const analyzeUX = (input: string, language: 'en' | 'ar'): AnalysisResult 
     issues: shuffledIssues.slice(0, numIssues),
     recommendations: shuffledRecommendations.slice(0, numRecommendations),
     timestamp: new Date().toISOString(),
-    language
+    language,
   };
 };
