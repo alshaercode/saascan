@@ -1,26 +1,29 @@
+
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Lightbulb } from "lucide-react";
+import { useI18n } from "@/hooks/useI18n";
 
-const EmptyStateSection = ({ t }: any) => (
-  <Card className="text-center py-20 border-dashed border-2 border-[hsl(var(--border))] bg-gradient-to-br from-[hsl(var(--background))] to-[hsl(var(--accent))]/30">
-    <CardContent>
-      <div className="space-y-6">
-        <div className="relative inline-block">
-          <Lightbulb className="w-20 h-20 text-[hsl(var(--muted-foreground))]/50" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[hsl(var(--gradient-primary))]/20 to-[hsl(var(--gradient-secondary))]/20 rounded-full blur-xl"></div>
+const EmptyStateSection = () => {
+  const { t } = useI18n();
+
+  return (
+    <Card className="bg-[hsl(var(--card-bg))]/50 backdrop-blur-sm border-dashed border-2 border-[hsl(var(--border))]">
+      <CardContent className="flex flex-col items-center justify-center py-16 text-center space-y-4">
+        <div className="w-16 h-16 bg-[hsl(var(--accent))] rounded-full flex items-center justify-center">
+          <Lightbulb className="w-8 h-8 text-[hsl(var(--muted-foreground))]" />
         </div>
-        <div className="space-y-3">
-          <h3 className="text-2xl font-bold text-[hsl(var(--muted-foreground))]">
-            {t.noResults}
+        <div className="space-y-2">
+          <h3 className="text-xl font-semibold text-[hsl(var(--navbar-text))]">
+            {t("noResults")}
           </h3>
-          <p className="text-[hsl(var(--muted-foreground))] text-lg max-w-md mx-auto">
-            {t.noResultsDesc}
+          <p className="text-[hsl(var(--muted-foreground))] max-w-md">
+            {t("noResultsDesc")}
           </p>
         </div>
-      </div>
-    </CardContent>
-  </Card>
-);
+      </CardContent>
+    </Card>
+  );
+};
 
 export default EmptyStateSection;

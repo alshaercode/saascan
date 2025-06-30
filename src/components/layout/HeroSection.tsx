@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { RoughNotation } from "react-rough-notation";
@@ -16,7 +17,10 @@ const HeroSection = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { staggerChildren: 0.15, ease: "easeOut" },
+      transition: { 
+        staggerChildren: 0.15, 
+        ease: [0.4, 0, 0.2, 1] as [number, number, number, number]
+      },
     },
   };
 
@@ -25,7 +29,10 @@ const HeroSection = () => {
     visible: {
       opacity: 1,
       scale: 1,
-      transition: { duration: 0.3, ease: "easeOut" },
+      transition: { 
+        duration: 0.3, 
+        ease: [0.4, 0, 0.2, 1] as [number, number, number, number]
+      },
     },
   };
 
@@ -49,7 +56,7 @@ const HeroSection = () => {
         <motion.p
           initial={{ opacity: 0, y: 0 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
           className="text-xl md:text-2xl text-[hsl(var(--muted-foreground))] max-w-4xl mx-auto leading-relaxed font-medium"
         >
           {t("subtitle")}
