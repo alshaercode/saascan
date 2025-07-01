@@ -1,15 +1,18 @@
+
 import React, { useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 export default function Logo() {
   const location = useLocation();
   const circleRef = useRef<SVGCircleElement>(null);
-  const barsRef = useRef<SVGRectElement[]>([]);
+  const scanLineRef = useRef<SVGLineElement>(null);
 
   useEffect(() => {
     if (location.pathname !== "/") return; // Animate only on home page
 
     const circle = circleRef.current;
+    const scanLine = scanLineRef.current;
+    
     if (circle) {
       const length = circle.getTotalLength();
       circle.style.strokeDasharray = `${length}`;
@@ -20,32 +23,21 @@ export default function Logo() {
       }, 100);
     }
 
-    barsRef.current.forEach((bar, i) => {
-      if (bar) {
-        // Use getTotalLength if available; rects may not support it, so fallback:
-        const length = bar.getTotalLength
-          ? bar.getTotalLength()
-          : bar.getBBox().width;
-        bar.style.strokeDasharray = `${length}`;
-        bar.style.strokeDashoffset = `${length}`;
-        setTimeout(() => {
-          bar.style.transition = `stroke-dashoffset 1s ease-out ${
-            (i + 1) * 300
-          }ms`;
-          bar.style.strokeDashoffset = "0";
-        }, 100);
-      }
-    });
+    if (scanLine) {
+      const length = scanLine.getTotalLength();
+      scanLine.style.strokeDasharray = `${length}`;
+      scanLine.style.strokeDashoffset = `${length}`;
+      setTimeout(() => {
+        scanLine.style.transition = "stroke-dashoffset 1s ease-out 800ms";
+        scanLine.style.strokeDashoffset = "0";
+      }, 100);
+    }
   }, [location.pathname]);
-
-  const setBarRef = (el: SVGRectElement, idx: number) => {
-    barsRef.current[idx] = el;
-  };
 
   return (
     <Link
       to="/"
-      aria-label="Go to home - SaaS Idea Analyzer"
+      aria-label="Go to home - SaasCan"
       className="inline-block cursor-pointer select-none group"
       tabIndex={0}
     >
@@ -58,70 +50,83 @@ export default function Logo() {
         className="transition-transform duration-300 ease-in-out group-hover:scale-110 group-focus:scale-110"
         aria-hidden="true"
       >
+        {/* Radar/Scanner Circle */}
         <circle
           ref={circleRef}
-          cx="50"
-          cy="50"
+          cx="60"
+          cy="60"
           r="35"
           stroke="currentColor"
-          strokeWidth="6"
+          strokeWidth="3"
           fill="none"
           className="group-hover:stroke-blue-600 transition-colors duration-300"
           style={{ strokeDasharray: 0, strokeDashoffset: 0 }}
         />
-        <rect
-          ref={(el) => el && setBarRef(el, 0)}
-          x="38"
-          y="65"
-          width="6"
-          height="15"
-          fill="none"
+        
+        {/* Inner scanning circle */}
+        <circle
+          cx="60"
+          cy="60"
+          r="20"
           stroke="currentColor"
-          strokeWidth={2}
-          rx={1}
-          ry={1}
-          className="group-hover:stroke-blue-600 transition-colors duration-300"
-          style={{ strokeDasharray: 0, strokeDashoffset: 0 }}
-        />
-        <rect
-          ref={(el) => el && setBarRef(el, 1)}
-          x="50"
-          y="55"
-          width="6"
-          height="25"
+          strokeWidth="2"
           fill="none"
+          opacity="0.6"
+          className="group-hover:stroke-blue-600 transition-colors duration-300"
+        />
+        
+        {/* Scanning line */}
+        <line
+          ref={scanLineRef}
+          x1="60"
+          y1="25"
+          x2="60"
+          y2="95"
           stroke="currentColor"
-          strokeWidth={2}
-          rx={1}
-          ry={1}
+          strokeWidth="2"
           className="group-hover:stroke-blue-600 transition-colors duration-300"
           style={{ strokeDasharray: 0, strokeDashoffset: 0 }}
         />
-        <rect
-          ref={(el) => el && setBarRef(el, 2)}
-          x="62"
-          y="45"
-          width="6"
-          height="35"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={2}
-          rx={1}
-          ry={1}
-          className="group-hover:stroke-blue-600 transition-colors duration-300"
-          style={{ strokeDasharray: 0, strokeDashoffset: 0 }}
-        />
-        <rect
-          x="75"
-          y="75"
-          width="12"
-          height="30"
-          rx={6}
-          ry={6}
+        
+        {/* Scanner dot in center */}
+        <circle
+          cx="60"
+          cy="60"
+          r="3"
           fill="currentColor"
-          transform="rotate(-45 75 75)"
           className="group-hover:fill-blue-600 transition-colors duration-300"
         />
+        
+        {/* Corner brackets for scanner effect */}
+        <path
+          d="M 35 35 L 25 35 L 25 25 L 35 25"
+          stroke="currentColor"
+          strokeWidth="2"
+          fill="none"
+          className="group-hover:stroke-blue-600 transition-colors duration-300"
+        />
+        <path
+          d="M 85 35 L 95 35 L 95 25 L 85 25"
+          stroke="currentColor"
+          strokeWidth="2"
+          fill="none"
+          className="group-hover:stroke-blue-600 transition-colors duration-300"
+        />
+        <path
+          d="M 35 85 L 25 85 L 25 95 L 35 95"
+          stroke="currentColor"
+          strokeWidth="2"
+          fill="none"
+          className="group-hover:stroke-blue-600 transition-colors duration-300"
+        />
+        <path
+          d="M 85 85 L 95 85 L 95 95 L 85 95"
+          stroke="currentColor"
+          strokeWidth="2"
+          fill="none"
+          className="group-hover:stroke-blue-600 transition-colors duration-300"
+        />
+        
         <text
           x="60"
           y="110"
@@ -132,7 +137,7 @@ export default function Logo() {
           textAnchor="middle"
           className="group-hover:fill-blue-600 transition-colors duration-300"
         >
-          SaaS Analyzer
+          SaasCan
         </text>
       </svg>
     </Link>

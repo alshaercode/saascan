@@ -52,7 +52,7 @@ const useSaasAnalysis = (language: string, t: any) => {
         const updatedResults = [newResult, ...results];
         setResults(updatedResults);
         localStorage.setItem(
-          "saasAnalysisResults",
+          "saascanResults",
           JSON.stringify(updatedResults)
         );
         setInput("");
@@ -65,11 +65,11 @@ const useSaasAnalysis = (language: string, t: any) => {
       }
 
       const prompt = `
-You are a SaaS business analyst. Analyze the following SaaS idea and provide a detailed business analysis.
+You are a SaasCan business analyst. Scan and analyze the following SaaS idea and provide a detailed business analysis.
 
 SaaS Idea: "${input}"
 
-Please provide your analysis in JSON format with the following structure:
+Please provide your scanning results in JSON format with the following structure:
 {
   "score": <number between 40-95>,
   "issues": [
@@ -187,7 +187,7 @@ Return only valid JSON, no additional text.
       const updatedResults = [newResult, ...results];
       setResults(updatedResults);
       localStorage.setItem(
-        "saasAnalysisResults",
+        "saascanResults",
         JSON.stringify(updatedResults)
       );
       setInput("");
@@ -197,7 +197,7 @@ Return only valid JSON, no additional text.
         description: t.analysisCompleteDesc,
       });
     } catch (error) {
-      console.error("Analysis error:", error);
+      console.error("Scan error:", error);
       toast({
         title: t.analysisError,
         description:
@@ -217,7 +217,7 @@ Return only valid JSON, no additional text.
     const url = URL.createObjectURL(dataBlob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `saas-analysis-${
+    link.download = `saascan-results-${
       new Date().toISOString().split("T")[0]
     }.json`;
     document.body.appendChild(link);
@@ -233,7 +233,7 @@ Return only valid JSON, no additional text.
 
   const handleClear = () => {
     setResults([]);
-    localStorage.removeItem("saasAnalysisResults");
+    localStorage.removeItem("saascanResults");
     toast({
       title: t.historyCleared,
       description: t.historyClearedDesc,

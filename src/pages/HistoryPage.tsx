@@ -1,3 +1,4 @@
+
 // src/pages/HistoryPage.jsx
 import React, { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
@@ -33,7 +34,7 @@ const HistoryPage = () => {
     const url = URL.createObjectURL(dataBlob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `saas-analysis-history-${
+    link.download = `saascan-history-${
       new Date().toISOString().split("T")[0]
     }.json`;
     document.body.appendChild(link);
@@ -52,7 +53,7 @@ const HistoryPage = () => {
       <Navbar language={language} onLanguageToggle={toggleLanguage} />
       <main className="container mx-auto px-4 py-8 space-y-8">
         <h1 className="text-4xl font-bold mb-4">
-          {t.historyPageTitle || "History"}
+          {t.historyPageTitle}
         </h1>
         <div className="flex gap-3 mb-6">
           <Button
@@ -66,7 +67,7 @@ const HistoryPage = () => {
           <Button
             variant="outline"
             onClick={handleClearHistory}
-            className="flex items-center gap-2 text-[hsl(var(--score-error))]"
+            className="flex items-center gap-2 text-red-600"
           >
             <Trash2 className="w-4 h-4" />
             {t.clearHistory}

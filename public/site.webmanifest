@@ -1,6 +1,7 @@
+
 {
-  "name": "SaaS Idea Analyzer",
-  "short_name": "Analyzer",
+  "name": "SaasCan Scanner",
+  "short_name": "SaasCan",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",

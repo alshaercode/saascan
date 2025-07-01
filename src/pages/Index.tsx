@@ -1,3 +1,4 @@
+
 "use client";
 import React, { useState } from "react";
 import Navbar from "@/components/Navbar";
@@ -13,7 +14,6 @@ import OnboardingSteps from "@/components/onboarding/OnboardingSteps";
 import ExampleIdeas from "@/components/examples/ExampleIdeas";
 import SkeletonLoader from "@/components/analysis/SkeletonLoader";
 import ProgressIndicator from "@/components/analysis/ProgressIndicator";
-import HistoryPreview from "@/components/HistoryPreview";
 
 const Index = () => {
   const { language, toggleLanguage, t } = useLanguage();
@@ -35,8 +35,7 @@ const Index = () => {
 
   return (
     <div
-      className={`flex flex-col min-h-screen bg-gradient-to-br from-[hsl(var(--hero-gradient-start))] via-[hsl(var(--background))] to-[hsl(var(--hero-gradient-end))]
-        
+      className={`flex flex-col min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50
         ${language === "ar" ? "rtl" : "ltr"}`}
     >
       <Navbar language={language} onLanguageToggle={toggleLanguage} />
@@ -46,6 +45,13 @@ const Index = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-1 max-w-4xl mx-auto gap-8">
           <div className="lg:col-span-2 space-y-6">
+            {showOnboarding && (
+              <div className="space-y-6">
+                <OnboardingSteps />
+                <ExampleIdeas onExampleSelect={handleExampleSelect} />
+              </div>
+            )}
+
             <InputAnalysisSection
               input={input}
               setInput={setInput}
