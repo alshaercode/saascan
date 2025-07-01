@@ -1,3 +1,4 @@
+
 @import url("https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap");
 
 @tailwind base;
@@ -52,6 +53,17 @@ All colors MUST be HSL.
     --card-border: 0 0% 90%;
 
     --input-focus: 0 0% 0%;
+
+    /* Gradient colors for the app */
+    --gradient-primary: 220 100% 60%;
+    --gradient-secondary: 280 100% 70%;
+
+    /* Score colors */
+    --score-excellent: 142 76% 36%;
+    --score-good: 43 96% 56%;
+    --score-warning: 25 95% 53%;
+    --score-error: 0 84% 60%;
+    --score-error-bg: 0 93% 94%;
   }
 
   .dark {
@@ -95,6 +107,10 @@ All colors MUST be HSL.
     --card-border: 0 0% 20%;
 
     --input-focus: 0 0% 100%;
+
+    /* Gradient colors for dark mode */
+    --gradient-primary: 220 100% 60%;
+    --gradient-secondary: 280 100% 70%;
   }
 }
 
@@ -132,5 +148,24 @@ All colors MUST be HSL.
     backdrop-filter: blur(12px);
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  /* Custom scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: hsl(var(--muted));
+    border-radius: 3px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: hsl(var(--gradient-primary));
+    border-radius: 3px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--gradient-secondary));
   }
 }

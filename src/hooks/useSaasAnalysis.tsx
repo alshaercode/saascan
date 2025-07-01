@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import type { AnalysisResult } from "@/lib/uxAnalyzer";
 
-const useSaasAnalysis = (language: string, t: any) => {
+const useSaasAnalysis = (language: string) => {
   const [input, setInput] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [results, setResults] = useState<AnalysisResult[]>([]);
@@ -19,8 +19,8 @@ const useSaasAnalysis = (language: string, t: any) => {
   const handleAnalyze = async () => {
     if (!input.trim()) {
       toast({
-        title: t.inputRequired,
-        description: t.inputRequiredDesc,
+        title: "Input Required",
+        description: "Please enter your SaaS idea to analyze",
         variant: "destructive",
       });
       return;
@@ -58,8 +58,8 @@ const useSaasAnalysis = (language: string, t: any) => {
         setInput("");
 
         toast({
-          title: t.analysisComplete,
-          description: t.analysisCompleteDesc,
+          title: "Analysis Complete",
+          description: "Your SaaS idea has been analyzed successfully",
         });
         return;
       }
@@ -218,13 +218,13 @@ Return only valid JSON format without additional text or markdown formatting.
       setInput("");
 
       toast({
-        title: t.analysisComplete,
-        description: t.analysisCompleteDesc,
+        title: "Analysis Complete",
+        description: "Your SaaS idea has been analyzed with detailed insights",
       });
     } catch (error) {
       console.error("Scan error:", error);
       toast({
-        title: t.analysisError,
+        title: "Analysis Error",
         description:
           error instanceof Error
             ? error.message
@@ -251,8 +251,8 @@ Return only valid JSON format without additional text or markdown formatting.
     URL.revokeObjectURL(url);
 
     toast({
-      title: t.exportComplete,
-      description: t.exportCompleteDesc,
+      title: "Export Complete",
+      description: "Your analysis results have been exported successfully",
     });
   };
 
@@ -260,8 +260,8 @@ Return only valid JSON format without additional text or markdown formatting.
     setResults([]);
     localStorage.removeItem("saascanResults");
     toast({
-      title: t.historyCleared,
-      description: t.historyClearedDesc,
+      title: "History Cleared",
+      description: "All analysis results have been cleared",
     });
   };
 

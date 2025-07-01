@@ -3,12 +3,10 @@ import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { RoughNotation } from "react-rough-notation";
 import { motion } from "framer-motion";
-import { useTranslation } from "@/hooks/useTranslation";
 
 const HeroSection = () => {
-  const { t } = useTranslation();
-
-  const words = t("title").trim().split(" ");
+  const title = "SaaS Idea Scanner";
+  const words = title.trim().split(" ");
   const lastWord = words.pop();
   const firstPart = words.join(" ");
 
@@ -24,22 +22,39 @@ const HeroSection = () => {
     },
   };
 
-  const badgeVariant = {
-    hidden: { opacity: 0, scale: 0.8 },
+  const badgeVariants = {
+    hidden: { opacity: 0, scale: 0.8, y: 20 },
     visible: {
       opacity: 1,
       scale: 1,
+      y: 0,
       transition: { 
-        duration: 0.3, 
+        duration: 0.4, 
         ease: [0.4, 0, 0.2, 1] as [number, number, number, number]
       },
     },
   };
 
+  const badges = [
+    "Instant Analysis",
+    "Market Insights", 
+    "Detailed Reports"
+  ];
+
   return (
-    <div className="text-center space-y-8 py-16">
+    <motion.div 
+      className="text-center space-y-8 py-16"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8 }}
+    >
       <div className="space-y-6">
-        <h1 className="text-5xl md:text-7xl font-bold leading-tight">
+        <motion.h1 
+          className="text-5xl md:text-7xl font-bold leading-tight"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
           {firstPart}{" "}
           <RoughNotation
             type="underline"
@@ -49,17 +64,24 @@ const HeroSection = () => {
             padding={[-25, 0]}
             show
           >
-            {lastWord}
+            <motion.span
+              animate={{ 
+                color: ["hsl(var(--gradient-primary))", "hsl(var(--gradient-secondary))", "hsl(var(--gradient-primary))"]
+              }}
+              transition={{ duration: 3, repeat: Infinity }}
+            >
+              {lastWord}
+            </motion.span>
           </RoughNotation>
-        </h1>
+        </motion.h1>
 
         <motion.p
-          initial={{ opacity: 0, y: 0 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+          transition={{ duration: 0.8, delay: 0.4, ease: [0.4, 0, 0.2, 1] }}
           className="text-xl md:text-2xl text-[hsl(var(--muted-foreground))] max-w-4xl mx-auto leading-relaxed font-medium"
         >
-          {t("subtitle")}
+          Get comprehensive analysis of your SaaS ideas with AI-powered insights, market validation, and strategic recommendations
         </motion.p>
       </div>
 
@@ -69,23 +91,27 @@ const HeroSection = () => {
         animate="visible"
         className="flex flex-wrap justify-center gap-3 mt-8"
       >
-        {[
-          t("badges.instantAnalysis"),
-          t("badges.marketInsights"),
-          t("badges.detailedReports"),
-        ].map((text, i) => (
+        {badges.map((text, i) => (
           <motion.div
             key={text}
-            variants={badgeVariant}
-            transition={{ delay: i * 0.15 }}
+            variants={badgeVariants}
+            whileHover={{ 
+              scale: 1.1,
+              rotate: [-1, 1, -1, 0],
+              transition: { duration: 0.3 }
+            }}
+            whileTap={{ scale: 0.95 }}
           >
-            <Badge variant="secondary" className="px-4 py-2 text-sm">
+            <Badge 
+              variant="secondary" 
+              className="px-4 py-2 text-sm cursor-pointer hover:bg-[hsl(var(--gradient-primary))]/10 transition-colors"
+            >
               {text}
             </Badge>
           </motion.div>
         ))}
       </motion.div>
-    </div>
+    </motion.div>
   );
 };
 
