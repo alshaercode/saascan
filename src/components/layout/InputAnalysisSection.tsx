@@ -1,4 +1,5 @@
-import React from "react";
+
+import React, { useState } from "react";
 import {
   Card,
   CardHeader,
@@ -9,8 +10,9 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Globe, ArrowRight } from "lucide-react";
-import { useI18n } from "@/hooks/useI18n";
+import { useTranslation } from "@/hooks/useTranslation";
 import InputValidation from "@/components/analysis/InputValidation";
+import { motion } from "framer-motion";
 
 interface InputAnalysisSectionProps {
   input: string;
@@ -25,31 +27,39 @@ const InputAnalysisSection = ({
   isAnalyzing,
   handleAnalyze,
 }: InputAnalysisSectionProps) => {
-  const { t } = useI18n();
+  const { t } = useTranslation();
+  const [isFocused, setIsFocused] = useState(false);
 
   return (
     <div className="grid grid-cols-1 max-w-7xl gap-8 w-full mx-auto">
       <Card className="shadow-xl border-0 bg-[hsl(var(--card-bg))]/80 backdrop-blur-md">
         <CardHeader className="pb-4">
           <CardTitle className="flex items-center mx-auto gap-3 text-2xl">
-            {/* <div className="p-2 bg-gradient-to-r from-[hsl(var(--gradient-primary))]/10 to-[hsl(var(--gradient-secondary))]/10 rounded-lg">
-              <Globe className="w-6 h-6 text-[hsl(var(--gradient-primary))]" />
-            </div> */}
             {t("inputTitle")}
           </CardTitle>
-          {/* <CardDescription className="text-base text-[hsl(var(--muted-foreground))]">
-            {t("inputDescription")}
-          </CardDescription> */}
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-3">
-            <Textarea
-              placeholder={t("inputPlaceholder")}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              className="min-h-48 text-base border-2 focus:border-[hsl(var(--gradient-primary))] transition-all duration-300 resize-none bg-[hsl(var(--background))]/50 backdrop-blur-sm"
-              disabled={isAnalyzing}
-            />
+            <motion.div
+              animate={{
+                height: isFocused ? "200px" : "120px",
+              }}
+              transition={{
+                duration: 0.3,
+                ease: [0.4, 0, 0.2, 1],
+              }}
+              className="overflow-hidden"
+            >
+              <Textarea
+                placeholder={t("inputPlaceholder")}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
+                className="h-full text-base border-2 focus:border-[hsl(var(--gradient-primary))] transition-all duration-300 resize-none bg-[hsl(var(--background))]/50 backdrop-blur-sm"
+                disabled={isAnalyzing}
+              />
+            </motion.div>
             <InputValidation input={input} isAnalyzing={isAnalyzing} />
           </div>
           <div className="flex justify-center">

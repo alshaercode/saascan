@@ -11,7 +11,7 @@ const useSaasAnalysis = (language: string, t: any) => {
 
   useEffect(() => {
     const saved = JSON.parse(
-      localStorage.getItem("saasAnalysisResults") || "[]"
+      localStorage.getItem("saascanResults") || "[]"
     );
     if (Array.isArray(saved) && saved.length > 0) setResults(saved);
   }, []);
@@ -39,14 +39,14 @@ const useSaasAnalysis = (language: string, t: any) => {
         // If no API key, use the mock analyzer as fallback
         console.log("No API key found, using mock analysis");
         const { analyzeUX } = await import("@/lib/uxAnalyzer");
-        const mockResult = analyzeUX(input, language === "ar" ? "ar" : "en");
+        const mockResult = analyzeUX(input, "en");
 
         const newResult: AnalysisResult = {
           ...mockResult,
           id: Date.now().toString(),
           timestamp: new Date().toISOString(),
           input,
-          language: language === "ar" ? "ar" : "en",
+          language: "en",
         };
 
         const updatedResults = [newResult, ...results];
@@ -65,35 +65,60 @@ const useSaasAnalysis = (language: string, t: any) => {
       }
 
       const prompt = `
-You are a SaasCan business analyst. Scan and analyze the following SaaS idea and provide a detailed business analysis.
+As a professional SaaS business analyst, conduct a comprehensive analysis of the following SaaS concept. Your analysis should be strategic, data-driven, and actionable.
 
-SaaS Idea: "${input}"
+SaaS Concept: "${input}"
 
-Please provide your scanning results in JSON format with the following structure:
+Perform a detailed business analysis covering:
+
+1. MARKET VIABILITY ASSESSMENT
+- Target market size and addressable market
+- Customer pain points and value proposition alignment
+- Competitive landscape and differentiation opportunities
+- Market entry barriers and timing considerations
+
+2. BUSINESS MODEL EVALUATION
+- Revenue model sustainability and scalability
+- Customer acquisition cost (CAC) and lifetime value (LTV) potential
+- Pricing strategy effectiveness
+- Unit economics and profitability pathways
+
+3. TECHNICAL & OPERATIONAL FEASIBILITY
+- Development complexity and resource requirements
+- Infrastructure scalability considerations
+- Integration capabilities and dependencies
+- Security and compliance requirements
+
+4. RISK ASSESSMENT
+- Market risks (competition, saturation, economic factors)
+- Technical risks (scalability, security, maintenance)
+- Business risks (customer churn, pricing pressure, regulatory)
+- Operational risks (talent acquisition, funding, partnerships)
+
+5. STRATEGIC RECOMMENDATIONS
+- Priority improvements for concept validation
+- Go-to-market strategy suggestions
+- Product development roadmap considerations
+- Key success metrics and milestones
+
+Provide your analysis in JSON format:
 {
-  "score": <number between 40-95>,
+  "score": <viability score 40-95>,
   "issues": [
-    "Issue 1 description",
-    "Issue 2 description",
-    "Issue 3 description"
+    "Specific challenge or risk identified",
+    "Another key concern requiring attention",
+    "Additional strategic consideration"
   ],
   "recommendations": [
-    "Recommendation 1",
-    "Recommendation 2", 
-    "Recommendation 3"
+    "Specific actionable recommendation",
+    "Strategic improvement suggestion", 
+    "Implementation priority or next step"
   ]
 }
 
-Focus on:
-- Market potential and target audience
-- Technical feasibility and complexity
-- Competitive landscape
-- Revenue model viability
-- Scalability challenges
-- Key success factors
+Focus on providing specific, actionable insights rather than generic advice. Consider industry best practices, market trends, and proven SaaS success patterns in your analysis.
 
-Respond in ${language === "ar" ? "Arabic" : "English"} language only.
-Return only valid JSON, no additional text.
+Return only valid JSON format without additional text or markdown formatting.
       `;
 
       const response = await fetch(
@@ -114,9 +139,9 @@ Return only valid JSON, no additional text.
               },
             ],
             generationConfig: {
-              temperature: 0.7,
+              temperature: 0.3,
               topK: 1,
-              topP: 1,
+              topP: 0.8,
               maxOutputTokens: 2048,
             },
             safetySettings: [
@@ -164,7 +189,7 @@ Return only valid JSON, no additional text.
         console.error("Failed to parse Gemini response:", content);
         // Fallback to mock analysis if parsing fails
         const { analyzeUX } = await import("@/lib/uxAnalyzer");
-        parsed = analyzeUX(input, language === "ar" ? "ar" : "en");
+        parsed = analyzeUX(input, "en");
       }
 
       const newResult: AnalysisResult = {
@@ -181,7 +206,7 @@ Return only valid JSON, no additional text.
         recommendations: Array.isArray(parsed.recommendations)
           ? parsed.recommendations
           : ["Focus on market validation"],
-        language: language === "ar" ? "ar" : "en",
+        language: "en",
       };
 
       const updatedResults = [newResult, ...results];

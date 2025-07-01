@@ -26,7 +26,7 @@ const Index = () => {
     handleAnalyze,
     handleExport,
     handleClear,
-  } = useSaasAnalysis(language, t);
+  } = useSaasAnalysis("en", t);
 
   const handleExampleSelect = (example: string) => {
     setInput(example);
@@ -34,11 +34,8 @@ const Index = () => {
   };
 
   return (
-    <div
-      className={`flex flex-col min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50
-        ${language === "ar" ? "rtl" : "ltr"}`}
-    >
-      <Navbar language={language} onLanguageToggle={toggleLanguage} />
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
+      <Navbar language="en" onLanguageToggle={() => {}} />
 
       <main className="container mx-auto px-4 py-8 space-y-8 flex-grow">
         <HeroSection />
@@ -66,7 +63,7 @@ const Index = () => {
             {results.length > 0 && !isAnalyzing && (
               <ResultsSection
                 results={results}
-                language={language}
+                language="en"
                 handleExport={handleExport}
                 handleClear={handleClear}
               />

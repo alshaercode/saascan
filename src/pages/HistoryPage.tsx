@@ -1,5 +1,4 @@
 
-// src/pages/HistoryPage.jsx
 import React, { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -7,12 +6,12 @@ import SaasAnalysisTable from "@/components/SaasAnalysisTable";
 import { loadFromLocalStorage, saveToLocalStorage } from "@/lib/storage";
 import { Button } from "@/components/ui/button";
 import { Trash2, Download } from "lucide-react";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useTranslation } from "@/hooks/useTranslation";
 import { useToast } from "@/hooks/use-toast";
 
 const HistoryPage = () => {
   const [history, setHistory] = useState([]);
-  const { t, language, toggleLanguage } = useLanguage();
+  const { t } = useTranslation();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -23,8 +22,8 @@ const HistoryPage = () => {
     setHistory([]);
     saveToLocalStorage([]);
     toast({
-      title: t.historyCleared,
-      description: t.historyClearedDesc,
+      title: t("historyCleared"),
+      description: t("historyClearedDesc"),
     });
   };
 
@@ -43,17 +42,17 @@ const HistoryPage = () => {
     URL.revokeObjectURL(url);
 
     toast({
-      title: t.exportComplete,
-      description: t.exportCompleteDesc,
+      title: t("exportComplete"),
+      description: t("exportCompleteDesc"),
     });
   };
 
   return (
-    <div className={`min-h-screen ${language === "ar" ? "rtl" : "ltr"}`}>
-      <Navbar language={language} onLanguageToggle={toggleLanguage} />
+    <div className="min-h-screen">
+      <Navbar language="en" onLanguageToggle={() => {}} />
       <main className="container mx-auto px-4 py-8 space-y-8">
         <h1 className="text-4xl font-bold mb-4">
-          {t.historyPageTitle}
+          {t("historyPageTitle")}
         </h1>
         <div className="flex gap-3 mb-6">
           <Button
@@ -62,7 +61,7 @@ const HistoryPage = () => {
             className="flex items-center gap-2"
           >
             <Download className="w-4 h-4" />
-            {t.exportButton}
+            {t("exportButton")}
           </Button>
           <Button
             variant="outline"
@@ -70,10 +69,10 @@ const HistoryPage = () => {
             className="flex items-center gap-2 text-red-600"
           >
             <Trash2 className="w-4 h-4" />
-            {t.clearHistory}
+            {t("clearHistory")}
           </Button>
         </div>
-        <SaasAnalysisTable results={history} language={language} />
+        <SaasAnalysisTable results={history} language="en" />
       </main>
       <Footer />
     </div>

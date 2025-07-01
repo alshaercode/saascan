@@ -3,10 +3,10 @@ import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { RoughNotation } from "react-rough-notation";
 import { motion } from "framer-motion";
-import { useI18n } from "@/hooks/useI18n";
+import { useTranslation } from "@/hooks/useTranslation";
 
 const HeroSection = () => {
-  const { t } = useI18n();
+  const { t } = useTranslation();
 
   const words = t("title").trim().split(" ");
   const lastWord = words.pop();

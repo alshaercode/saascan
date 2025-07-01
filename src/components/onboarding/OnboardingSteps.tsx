@@ -3,11 +3,11 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Target, Brain, TrendingUp } from "lucide-react";
-import { useI18n } from "@/hooks/useI18n";
+import { useTranslation } from "@/hooks/useTranslation";
 import { motion } from "framer-motion";
 
 const OnboardingSteps = () => {
-  const { t } = useI18n();
+  const { t } = useTranslation();
 
   const steps = [
     {

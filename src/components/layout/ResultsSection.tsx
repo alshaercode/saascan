@@ -2,7 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Download, Trash2 } from "lucide-react";
-import { useI18n } from "@/hooks/useI18n";
+import { useTranslation } from "@/hooks/useTranslation";
 import SaasAnalysisTable from "@/components/SaasAnalysisTable";
 
 interface ResultsSectionProps {
@@ -18,7 +18,7 @@ const ResultsSection = ({
   handleExport,
   handleClear,
 }: ResultsSectionProps) => {
-  const { t } = useI18n();
+  const { t } = useTranslation();
 
   return (
     <div className="space-y-6">
