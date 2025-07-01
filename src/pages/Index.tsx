@@ -1,4 +1,3 @@
-
 "use client";
 import React, { useState } from "react";
 import Navbar from "@/components/Navbar";
@@ -36,23 +35,16 @@ const Index = () => {
 
   return (
     <div
-      className={`flex flex-col min-h-screen bg-gradient-to-br from-[hsl(var(--hero-gradient-start))] via-[hsl(var(--background))] to-[hsl(var(--hero-gradient-end))] ${
-        language === "ar" ? "rtl" : "ltr"
-      }`}
+      className={`flex flex-col min-h-screen bg-gradient-to-br from-[hsl(var(--hero-gradient-start))] via-[hsl(var(--background))] to-[hsl(var(--hero-gradient-end))]
+        
+        ${language === "ar" ? "rtl" : "ltr"}`}
     >
       <Navbar language={language} onLanguageToggle={toggleLanguage} />
 
       <main className="container mx-auto px-4 py-8 space-y-8 flex-grow">
         <HeroSection />
-        
-        {showOnboarding && !results.length && (
-          <div className="space-y-6">
-            <OnboardingSteps />
-            <ExampleIdeas onExampleSelect={handleExampleSelect} />
-          </div>
-        )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-1 max-w-4xl mx-auto gap-8">
           <div className="lg:col-span-2 space-y-6">
             <InputAnalysisSection
               input={input}
@@ -60,11 +52,11 @@ const Index = () => {
               isAnalyzing={isAnalyzing}
               handleAnalyze={handleAnalyze}
             />
-            
+
             <ProgressIndicator isAnalyzing={isAnalyzing} />
-            
+
             {isAnalyzing && <SkeletonLoader />}
-            
+
             {results.length > 0 && !isAnalyzing && (
               <ResultsSection
                 results={results}
@@ -73,18 +65,10 @@ const Index = () => {
                 handleClear={handleClear}
               />
             )}
-            
+
             {results.length === 0 && !isAnalyzing && !showOnboarding && (
               <EmptyStateSection />
             )}
-          </div>
-
-          <div className="lg:col-span-1">
-            <div className="sticky top-24 space-y-6">
-              {results.length > 0 && (
-                <HistoryPreview results={results} language={language} />
-              )}
-            </div>
           </div>
         </div>
       </main>

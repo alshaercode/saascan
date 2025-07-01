@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   Card,
@@ -32,15 +31,15 @@ const InputAnalysisSection = ({
     <div className="grid grid-cols-1 max-w-7xl gap-8 w-full mx-auto">
       <Card className="shadow-xl border-0 bg-[hsl(var(--card-bg))]/80 backdrop-blur-md">
         <CardHeader className="pb-4">
-          <CardTitle className="flex items-center gap-3 text-2xl">
-            <div className="p-2 bg-gradient-to-r from-[hsl(var(--gradient-primary))]/10 to-[hsl(var(--gradient-secondary))]/10 rounded-lg">
+          <CardTitle className="flex items-center mx-auto gap-3 text-2xl">
+            {/* <div className="p-2 bg-gradient-to-r from-[hsl(var(--gradient-primary))]/10 to-[hsl(var(--gradient-secondary))]/10 rounded-lg">
               <Globe className="w-6 h-6 text-[hsl(var(--gradient-primary))]" />
-            </div>
+            </div> */}
             {t("inputTitle")}
           </CardTitle>
-          <CardDescription className="text-base text-[hsl(var(--muted-foreground))]">
+          {/* <CardDescription className="text-base text-[hsl(var(--muted-foreground))]">
             {t("inputDescription")}
-          </CardDescription>
+          </CardDescription> */}
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-3">
@@ -67,7 +66,9 @@ const InputAnalysisSection = ({
                 </div>
               ) : (
                 <div className="flex items-center gap-3">
-                  <span className="font-semibold text-lg">{t("analyzeButton")}</span>
+                  <span className="font-semibold text-lg">
+                    {t("analyzeButton")}
+                  </span>
                   <ArrowRight className="w-5 h-5" />
                 </div>
               )}

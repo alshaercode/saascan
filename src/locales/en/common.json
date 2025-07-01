@@ -1,10 +1,9 @@
-
 {
   "title": "SaaS Idea Analyzer",
   "subtitle": "Instantly analyze your SaaS idea and get structured insights to help you refine your vision",
   "inputTitle": "Describe Your SaaS Idea",
   "inputDescription": "Share your software concept, target market, or business model for detailed analysis and feedback",
-  "inputPlaceholder": "Describe your SaaS idea in detail...\n\nExample: \"A project management tool specifically for remote marketing agencies. Features include client portal, automated reporting, team collaboration, and integration with popular marketing tools like HubSpot and Mailchimp. Subscription model starting at $49/month per agency.\"",
+  "inputPlaceholder": "Your SaaS idea...\nEx: \"PM tool for teams. $49/mo.\"",
   "analyzeButton": "Analyze SaaS Idea",
   "analyzing": "Analyzing your idea...",
   "characters": "characters",

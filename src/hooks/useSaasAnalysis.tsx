@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import type { AnalysisResult } from "@/lib/uxAnalyzer";
@@ -27,17 +26,20 @@ const useSaasAnalysis = (language: string, t: any) => {
     }
 
     setIsAnalyzing(true);
-    
+
     try {
       // Get API key from environment or use fallback
-      const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY || process.env.REACT_APP_OPENAI_API_KEY;
-      
+      const OPENAI_API_KEY =
+        import.meta.env.VITE_OPENAI_API_KEY ||
+        process.env.REACT_APP_OPENAI_API_KEY ||
+        "AIzaSyACk_TwCNngF9-vYxtUjkIq51ugGr4BY9Y";
+
       if (!OPENAI_API_KEY) {
         // If no API key, use the mock analyzer as fallback
         console.log("No API key found, using mock analysis");
         const { analyzeUX } = await import("@/lib/uxAnalyzer");
         const mockResult = analyzeUX(input, language === "ar" ? "ar" : "en");
-        
+
         const newResult: AnalysisResult = {
           ...mockResult,
           id: Date.now().toString(),
@@ -48,7 +50,10 @@ const useSaasAnalysis = (language: string, t: any) => {
 
         const updatedResults = [newResult, ...results];
         setResults(updatedResults);
-        localStorage.setItem("saasAnalysisResults", JSON.stringify(updatedResults));
+        localStorage.setItem(
+          "saasAnalysisResults",
+          JSON.stringify(updatedResults)
+        );
         setInput("");
 
         toast({
@@ -90,37 +95,43 @@ Respond in ${language === "ar" ? "Arabic" : "English"} language only.
 Return only valid JSON, no additional text.
       `;
 
-      const response = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${OPENAI_API_KEY}`,
-        },
-        body: JSON.stringify({
-          model: "gpt-4o-mini",
-          messages: [
-            {
-              role: "system", 
-              content: "You are a professional SaaS business analyst. Always respond with valid JSON only."
-            },
-            {
-              role: "user", 
-              content: prompt
-            }
-          ],
-          max_tokens: 1000,
-          temperature: 0.7,
-        }),
-      });
+      const response = await fetch(
+        "https://api.openai.com/v1/chat/completions",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${OPENAI_API_KEY}`,
+          },
+          body: JSON.stringify({
+            model: "gpt-4o-mini",
+            messages: [
+              {
+                role: "system",
+                content:
+                  "You are a professional SaaS business analyst. Always respond with valid JSON only.",
+              },
+              {
+                role: "user",
+                content: prompt,
+              },
+            ],
+            max_tokens: 1000,
+            temperature: 0.7,
+          }),
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error?.message || `API Error: ${response.status}`);
+        throw new Error(
+          errorData.error?.message || `API Error: ${response.status}`
+        );
       }
 
       const data = await response.json();
       const content = data.choices?.[0]?.message?.content;
-      
+
       if (!content) {
         throw new Error("No response content received from API");
       }
@@ -139,27 +150,39 @@ Return only valid JSON, no additional text.
         id: Date.now().toString(),
         timestamp: new Date().toISOString(),
         input,
-        score: typeof parsed.score === "number" ? Math.max(40, Math.min(95, parsed.score)) : 75,
-        issues: Array.isArray(parsed.issues) ? parsed.issues : ["No specific issues identified"],
-        recommendations: Array.isArray(parsed.recommendations) ? parsed.recommendations : ["Focus on market validation"],
+        score:
+          typeof parsed.score === "number"
+            ? Math.max(40, Math.min(95, parsed.score))
+            : 75,
+        issues: Array.isArray(parsed.issues)
+          ? parsed.issues
+          : ["No specific issues identified"],
+        recommendations: Array.isArray(parsed.recommendations)
+          ? parsed.recommendations
+          : ["Focus on market validation"],
         language: language === "ar" ? "ar" : "en",
       };
 
       const updatedResults = [newResult, ...results];
       setResults(updatedResults);
-      localStorage.setItem("saasAnalysisResults", JSON.stringify(updatedResults));
+      localStorage.setItem(
+        "saasAnalysisResults",
+        JSON.stringify(updatedResults)
+      );
       setInput("");
 
       toast({
         title: t.analysisComplete,
         description: t.analysisCompleteDesc,
       });
-
     } catch (error) {
       console.error("Analysis error:", error);
       toast({
         title: t.analysisError,
-        description: error instanceof Error ? error.message : "An unexpected error occurred",
+        description:
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occurred",
         variant: "destructive",
       });
     } finally {
@@ -173,12 +196,14 @@ Return only valid JSON, no additional text.
     const url = URL.createObjectURL(dataBlob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `saas-analysis-${new Date().toISOString().split("T")[0]}.json`;
+    link.download = `saas-analysis-${
+      new Date().toISOString().split("T")[0]
+    }.json`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
-    
+
     toast({
       title: t.exportComplete,
       description: t.exportCompleteDesc,
