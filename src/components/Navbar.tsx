@@ -1,7 +1,7 @@
 import React from "react";
 import { Globe, Star, Github, History, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useI18n } from "@/hooks/useI18n";
+
 import { Link, useLocation } from "react-router-dom";
 import Logo from "./Logo";
 
@@ -11,7 +11,6 @@ interface NavbarProps {
 }
 
 const Navbar = ({ language, onLanguageToggle }: NavbarProps) => {
-  const { t } = useI18n();
   const location = useLocation();
 
   const handleGitHubClick = () => {

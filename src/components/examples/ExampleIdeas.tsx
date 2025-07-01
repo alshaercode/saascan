@@ -1,10 +1,9 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Lightbulb, Copy } from "lucide-react";
-import { useI18n } from "@/hooks/useI18n";
+
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 
@@ -13,7 +12,6 @@ interface ExampleIdeasProps {
 }
 
 const ExampleIdeas = ({ onExampleSelect }: ExampleIdeasProps) => {
-  const { t } = useI18n();
   const { toast } = useToast();
 
   const examples = [
@@ -47,10 +45,14 @@ const ExampleIdeas = ({ onExampleSelect }: ExampleIdeasProps) => {
 
   const getComplexityColor = (complexity: string) => {
     switch (complexity) {
-      case "Low": return "bg-green-100 text-green-800";
-      case "Medium": return "bg-yellow-100 text-yellow-800";
-      case "High": return "bg-red-100 text-red-800";
-      default: return "bg-gray-100 text-gray-800";
+      case "Low":
+        return "bg-green-100 text-green-800";
+      case "Medium":
+        return "bg-yellow-100 text-yellow-800";
+      case "High":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 

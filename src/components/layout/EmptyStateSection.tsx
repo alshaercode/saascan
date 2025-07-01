@@ -1,12 +1,8 @@
-
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Lightbulb } from "lucide-react";
-import { useI18n } from "@/hooks/useI18n";
 
 const EmptyStateSection = () => {
-  const { t } = useI18n();
-
   return (
     <Card className="bg-[hsl(var(--card-bg))]/50 backdrop-blur-sm border-dashed border-2 border-[hsl(var(--border))]">
       <CardContent className="flex flex-col items-center justify-center py-16 text-center space-y-4">

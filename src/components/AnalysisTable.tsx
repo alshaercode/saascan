@@ -9,7 +9,6 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { AnalysisResult } from "@/lib/uxAnalyzer";
-import { useI18n } from "@/hooks/useI18n";
 
 interface AnalysisTableProps {
   results: AnalysisResult[];
@@ -17,8 +16,6 @@ interface AnalysisTableProps {
 }
 
 const AnalysisTable = ({ results, language }: AnalysisTableProps) => {
-  const { t } = useI18n();
-
   const formatDate = (date: string) => {
     return new Date(date).toLocaleDateString(
       language === "ar" ? "ar-SA" : "en-US",

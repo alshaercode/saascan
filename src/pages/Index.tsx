@@ -1,10 +1,8 @@
-
 "use client";
 import React, { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-import { useLanguage } from "@/hooks/useLanguage";
 import useSaasAnalysis from "@/hooks/useSaasAnalysis";
 import HeroSection from "@/components/layout/HeroSection";
 import InputAnalysisSection from "@/components/layout/InputAnalysisSection";
@@ -16,7 +14,6 @@ import SkeletonLoader from "@/components/analysis/SkeletonLoader";
 import ProgressIndicator from "@/components/analysis/ProgressIndicator";
 
 const Index = () => {
-  const { language, toggleLanguage, t } = useLanguage();
   const [showOnboarding, setShowOnboarding] = useState(true);
   const {
     input,
@@ -26,7 +23,7 @@ const Index = () => {
     handleAnalyze,
     handleExport,
     handleClear,
-  } = useSaasAnalysis("en", t);
+  } = useSaasAnalysis("en");
 
   const handleExampleSelect = (example: string) => {
     setInput(example);

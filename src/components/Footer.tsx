@@ -1,11 +1,9 @@
 import React from "react";
 import { Heart, Code, Github } from "lucide-react";
-import { useI18n } from "@/hooks/useI18n";
+
 import Logo from "./Logo";
 
 const Footer = () => {
-  const { t } = useI18n();
-
   return (
     <footer
       dir="ltr"

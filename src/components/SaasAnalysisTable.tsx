@@ -18,7 +18,6 @@ import {
   Lightbulb,
 } from "lucide-react";
 import type { AnalysisResult } from "@/lib/uxAnalyzer";
-import { useI18n } from "@/hooks/useI18n";
 
 interface SaasAnalysisTableProps {
   results: AnalysisResult[];
@@ -26,8 +25,6 @@ interface SaasAnalysisTableProps {
 }
 
 const SaasAnalysisTable = ({ results, language }: SaasAnalysisTableProps) => {
-  const { t } = useI18n();
-
   const formatDate = (date: string) => {
     try {
       return new Date(date).toLocaleDateString(
