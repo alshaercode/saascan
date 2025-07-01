@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import type { AnalysisResult } from "@/lib/uxAnalyzer";
@@ -28,13 +29,13 @@ const useSaasAnalysis = (language: string, t: any) => {
     setIsAnalyzing(true);
 
     try {
-      // Get API key from environment or use fallback
-      const OPENAI_API_KEY =
-        import.meta.env.VITE_OPENAI_API_KEY ||
-        process.env.REACT_APP_OPENAI_API_KEY ||
+      // Get API key from environment
+      const GEMINI_API_KEY =
+        import.meta.env.VITE_GEMINI_API_KEY ||
+        process.env.REACT_APP_GEMINI_API_KEY ||
         "AIzaSyACk_TwCNngF9-vYxtUjkIq51ugGr4BY9Y";
 
-      if (!OPENAI_API_KEY) {
+      if (!GEMINI_API_KEY) {
         // If no API key, use the mock analyzer as fallback
         console.log("No API key found, using mock analysis");
         const { analyzeUX } = await import("@/lib/uxAnalyzer");
@@ -96,28 +97,46 @@ Return only valid JSON, no additional text.
       `;
 
       const response = await fetch(
-        "https://api.openai.com/v1/chat/completions",
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${OPENAI_API_KEY}`,
           },
           body: JSON.stringify({
-            model: "gpt-4o-mini",
-            messages: [
+            contents: [
               {
-                role: "system",
-                content:
-                  "You are a professional SaaS business analyst. Always respond with valid JSON only.",
-              },
-              {
-                role: "user",
-                content: prompt,
+                parts: [
+                  {
+                    text: prompt,
+                  },
+                ],
               },
             ],
-            max_tokens: 1000,
-            temperature: 0.7,
+            generationConfig: {
+              temperature: 0.7,
+              topK: 1,
+              topP: 1,
+              maxOutputTokens: 2048,
+            },
+            safetySettings: [
+              {
+                category: "HARM_CATEGORY_HARASSMENT",
+                threshold: "BLOCK_MEDIUM_AND_ABOVE",
+              },
+              {
+                category: "HARM_CATEGORY_HATE_SPEECH",
+                threshold: "BLOCK_MEDIUM_AND_ABOVE",
+              },
+              {
+                category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+                threshold: "BLOCK_MEDIUM_AND_ABOVE",
+              },
+              {
+                category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+                threshold: "BLOCK_MEDIUM_AND_ABOVE",
+              },
+            ],
           }),
         }
       );
@@ -125,22 +144,24 @@ Return only valid JSON, no additional text.
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(
-          errorData.error?.message || `API Error: ${response.status}`
+          errorData.error?.message || `Gemini API Error: ${response.status}`
         );
       }
 
       const data = await response.json();
-      const content = data.choices?.[0]?.message?.content;
+      const content = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
       if (!content) {
-        throw new Error("No response content received from API");
+        throw new Error("No response content received from Gemini API");
       }
 
       let parsed: Partial<AnalysisResult> = {};
       try {
-        parsed = JSON.parse(content);
+        // Clean the response to extract JSON
+        const cleanContent = content.replace(/```json\n?|\n?```/g, '').trim();
+        parsed = JSON.parse(cleanContent);
       } catch (parseError) {
-        console.error("Failed to parse API response:", content);
+        console.error("Failed to parse Gemini response:", content);
         // Fallback to mock analysis if parsing fails
         const { analyzeUX } = await import("@/lib/uxAnalyzer");
         parsed = analyzeUX(input, language === "ar" ? "ar" : "en");
