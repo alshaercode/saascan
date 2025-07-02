@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -17,16 +18,13 @@ interface AnalysisTableProps {
 
 const AnalysisTable = ({ results, language }: AnalysisTableProps) => {
   const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString(
-      language === "ar" ? "ar-SA" : "en-US",
-      {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      }
-    );
+    return new Date(date).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   };
 
   const getScoreColor = (score: number) => {
@@ -56,7 +54,7 @@ const AnalysisTable = ({ results, language }: AnalysisTableProps) => {
               <div className="lg:col-span-2">
                 <h3 className="font-semibold text-[hsl(var(--navbar-text))] mb-2 flex items-center gap-2">
                   <Target className="w-4 h-4" />
-                  {t("inputText")}
+                  SaaS Concept
                 </h3>
                 <p className="text-sm text-[hsl(var(--muted-foreground))] bg-[hsl(var(--accent))] p-3 rounded-lg leading-relaxed">
                   {result.input.length > 200
@@ -69,7 +67,7 @@ const AnalysisTable = ({ results, language }: AnalysisTableProps) => {
               <div>
                 <h3 className="font-semibold text-[hsl(var(--navbar-text))] mb-2 flex items-center gap-2">
                   <TrendingUp className="w-4 h-4" />
-                  {t("uxScore")}
+                  Viability Score
                 </h3>
                 <div
                   className={`flex items-center gap-2 p-3 rounded-lg font-bold text-2xl ${getScoreColor(
@@ -85,15 +83,13 @@ const AnalysisTable = ({ results, language }: AnalysisTableProps) => {
               <div>
                 <h3 className="font-semibold text-[hsl(var(--navbar-text))] mb-2 flex items-center gap-2">
                   <Calendar className="w-4 h-4" />
-                  {t("analysisDate")}
+                  Analysis Date
                 </h3>
                 <p className="text-sm text-[hsl(var(--muted-foreground))] mb-3">
                   {formatDate(result.timestamp)}
                 </p>
                 <Badge variant="secondary" className="text-xs">
-                  {t("analysisNumber", {
-                    number: (results.length - index).toString(),
-                  })}
+                  Analysis #{(results.length - index).toString()}
                 </Badge>
               </div>
             </div>
@@ -103,7 +99,7 @@ const AnalysisTable = ({ results, language }: AnalysisTableProps) => {
               <div>
                 <h4 className="font-semibold text-[hsl(var(--issues-text))] mb-3 flex items-center gap-2">
                   <AlertTriangle className="w-4 h-4" />
-                  {t("issuesFound")}
+                  Key Challenges
                 </h4>
                 <ul className="space-y-2 text-sm">
                   {result.issues.map((issue, idx) => (
@@ -123,7 +119,7 @@ const AnalysisTable = ({ results, language }: AnalysisTableProps) => {
               <div>
                 <h4 className="font-semibold text-[hsl(var(--recommendations-text))] mb-3 flex items-center gap-2">
                   <CheckCircle className="w-4 h-4" />
-                  {t("recommendations")}
+                  Recommendations
                 </h4>
                 <ul className="space-y-2 text-sm">
                   {result.recommendations.map((rec, idx) => (

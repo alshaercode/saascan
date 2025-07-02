@@ -3,29 +3,26 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Target, Brain, TrendingUp } from "lucide-react";
-import { useTranslation } from "@/hooks/useTranslation";
 import { motion } from "framer-motion";
 
 const OnboardingSteps = () => {
-  const { t } = useTranslation();
-
   const steps = [
     {
       icon: <Target className="w-6 h-6" />,
-      title: t("onboarding.step1"),
-      description: t("onboarding.step1Desc"),
+      title: "Describe Your Idea",
+      description: "Share your SaaS concept, target market, and unique value proposition in detail.",
       color: "bg-blue-500",
     },
     {
       icon: <Brain className="w-6 h-6" />,
-      title: t("onboarding.step2"),
-      description: t("onboarding.step2Desc"),
+      title: "AI Analysis",
+      description: "Our AI analyzes market potential, technical feasibility, and competitive landscape.",
       color: "bg-purple-500",
     },
     {
       icon: <TrendingUp className="w-6 h-6" />,
-      title: t("onboarding.step3"),
-      description: t("onboarding.step3Desc"),
+      title: "Get Insights",
+      description: "Receive detailed recommendations, risk assessment, and strategic guidance.",
       color: "bg-green-500",
     },
   ];
@@ -35,7 +32,7 @@ const OnboardingSteps = () => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-xl">
           <CheckCircle className="w-5 h-5 text-green-500" />
-          {t("howToUse")}
+          How to Use Saascan
         </CardTitle>
       </CardHeader>
       <CardContent>

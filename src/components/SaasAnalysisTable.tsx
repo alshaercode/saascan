@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,16 +28,13 @@ interface SaasAnalysisTableProps {
 const SaasAnalysisTable = ({ results, language }: SaasAnalysisTableProps) => {
   const formatDate = (date: string) => {
     try {
-      return new Date(date).toLocaleDateString(
-        language === "ar" ? "ar-SA" : "en-US",
-        {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-        }
-      );
+      return new Date(date).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
     } catch {
       return date;
     }
@@ -75,9 +73,7 @@ const SaasAnalysisTable = ({ results, language }: SaasAnalysisTableProps) => {
               <CardTitle className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Lightbulb className="w-5 h-5" />
-                  {t("analysisNumber", {
-                    number: (results.length - index).toString(),
-                  })}
+                  Analysis #{results.length - index}
                 </div>
                 <Badge variant="secondary" className="text-xs">
                   {formatDate(result.timestamp || "")}
@@ -89,7 +85,7 @@ const SaasAnalysisTable = ({ results, language }: SaasAnalysisTableProps) => {
               <div>
                 <h3 className="font-semibold text-[hsl(var(--navbar-text))] mb-3 flex items-center gap-2">
                   <Target className="w-4 h-4" />
-                  {t("inputText")}
+                  SaaS Concept
                 </h3>
                 <p className="text-sm text-[hsl(var(--muted-foreground))] bg-[hsl(var(--accent))] p-4 rounded-lg leading-relaxed">
                   {result.input?.length > 300
@@ -105,7 +101,7 @@ const SaasAnalysisTable = ({ results, language }: SaasAnalysisTableProps) => {
                   <CardContent className="p-4">
                     <h4 className="font-semibold text-[hsl(var(--navbar-text))] mb-3 flex items-center gap-2">
                       <TrendingUp className="w-4 h-4" />
-                      {t("saasScore")}
+                      Viability Score
                     </h4>
                     <div
                       className={`flex items-center gap-2 p-3 rounded-lg font-bold text-2xl ${getScoreColor(
@@ -123,7 +119,7 @@ const SaasAnalysisTable = ({ results, language }: SaasAnalysisTableProps) => {
                   <CardContent className="p-4">
                     <h4 className="font-semibold text-[hsl(var(--issues-text))] mb-3 flex items-center gap-2">
                       <AlertTriangle className="w-4 h-4" />
-                      {t("issuesFound")}
+                      Key Challenges
                     </h4>
                     <ul className="space-y-2 text-sm max-h-32 overflow-y-auto">
                       {issues.length > 0 ? (
@@ -140,7 +136,7 @@ const SaasAnalysisTable = ({ results, language }: SaasAnalysisTableProps) => {
                         ))
                       ) : (
                         <li className="text-[hsl(var(--issues-text))] text-xs italic">
-                          No issues found
+                          No major challenges identified
                         </li>
                       )}
                     </ul>
@@ -152,7 +148,7 @@ const SaasAnalysisTable = ({ results, language }: SaasAnalysisTableProps) => {
                   <CardContent className="p-4">
                     <h4 className="font-semibold text-[hsl(var(--recommendations-text))] mb-3 flex items-center gap-2">
                       <CheckCircle className="w-4 h-4" />
-                      {t("recommendations")}
+                      Recommendations
                     </h4>
                     <ul className="space-y-2 text-sm max-h-32 overflow-y-auto">
                       {recommendations.length > 0 ? (
@@ -169,7 +165,7 @@ const SaasAnalysisTable = ({ results, language }: SaasAnalysisTableProps) => {
                         ))
                       ) : (
                         <li className="text-[hsl(var(--recommendations-text))] text-xs italic">
-                          No recommendations
+                          No specific recommendations
                         </li>
                       )}
                     </ul>

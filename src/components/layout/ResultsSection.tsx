@@ -2,7 +2,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Download, Trash2 } from "lucide-react";
-import { useTranslation } from "@/hooks/useTranslation";
 import SaasAnalysisTable from "@/components/SaasAnalysisTable";
 
 interface ResultsSectionProps {
@@ -18,14 +17,12 @@ const ResultsSection = ({
   handleExport,
   handleClear,
 }: ResultsSectionProps) => {
-  const { t } = useTranslation();
-
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-3xl font-bold text-[hsl(var(--navbar-text))] flex items-center gap-3">
           <div className="w-2 h-8 bg-gradient-to-b from-[hsl(var(--gradient-primary))] to-[hsl(var(--gradient-secondary))] rounded-full"></div>
-          {t("resultsTitle")}
+          Analysis Results
         </h2>
         <div className="flex gap-3">
           <Button
@@ -34,7 +31,7 @@ const ResultsSection = ({
             className="flex items-center gap-2 hover:bg-[hsl(var(--accent))] transition-colors"
           >
             <Download className="w-4 h-4" />
-            {t("exportButton")}
+            Export Results
           </Button>
           <Button
             variant="outline"
@@ -42,7 +39,7 @@ const ResultsSection = ({
             className="flex items-center gap-2 text-[hsl(var(--score-error))] hover:text-[hsl(var(--score-error))]/80 hover:bg-[hsl(var(--score-error-bg))] transition-colors"
           >
             <Trash2 className="w-4 h-4" />
-            {t("clearHistory")}
+            Clear History
           </Button>
         </div>
       </div>
