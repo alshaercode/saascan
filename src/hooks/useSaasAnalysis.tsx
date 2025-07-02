@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import type { AnalysisResult } from "@/lib/uxAnalyzer";
+import { SAAS_ANALYSIS_PROMPT } from "@/lib/analysisPrompt";
 
 const useSaasAnalysis = (language: string) => {
   const [input, setInput] = useState("");
@@ -64,62 +65,7 @@ const useSaasAnalysis = (language: string) => {
         return;
       }
 
-      const prompt = `
-As a professional SaaS business analyst, conduct a comprehensive analysis of the following SaaS concept. Your analysis should be strategic, data-driven, and actionable.
-
-SaaS Concept: "${input}"
-
-Perform a detailed business analysis covering:
-
-1. MARKET VIABILITY ASSESSMENT
-- Target market size and addressable market
-- Customer pain points and value proposition alignment
-- Competitive landscape and differentiation opportunities
-- Market entry barriers and timing considerations
-
-2. BUSINESS MODEL EVALUATION
-- Revenue model sustainability and scalability
-- Customer acquisition cost (CAC) and lifetime value (LTV) potential
-- Pricing strategy effectiveness
-- Unit economics and profitability pathways
-
-3. TECHNICAL & OPERATIONAL FEASIBILITY
-- Development complexity and resource requirements
-- Infrastructure scalability considerations
-- Integration capabilities and dependencies
-- Security and compliance requirements
-
-4. RISK ASSESSMENT
-- Market risks (competition, saturation, economic factors)
-- Technical risks (scalability, security, maintenance)
-- Business risks (customer churn, pricing pressure, regulatory)
-- Operational risks (talent acquisition, funding, partnerships)
-
-5. STRATEGIC RECOMMENDATIONS
-- Priority improvements for concept validation
-- Go-to-market strategy suggestions
-- Product development roadmap considerations
-- Key success metrics and milestones
-
-Provide your analysis in JSON format:
-{
-  "score": <viability score 40-95>,
-  "issues": [
-    "Specific challenge or risk identified",
-    "Another key concern requiring attention",
-    "Additional strategic consideration"
-  ],
-  "recommendations": [
-    "Specific actionable recommendation",
-    "Strategic improvement suggestion", 
-    "Implementation priority or next step"
-  ]
-}
-
-Focus on providing specific, actionable insights rather than generic advice. Consider industry best practices, market trends, and proven SaaS success patterns in your analysis.
-
-Return only valid JSON format without additional text or markdown formatting.
-      `;
+      const prompt = SAAS_ANALYSIS_PROMPT.replace("{INPUT}", input);
 
       const response = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`,
