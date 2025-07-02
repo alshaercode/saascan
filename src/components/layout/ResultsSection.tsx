@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Download, Trash2, FileText } from "lucide-react";
@@ -18,7 +17,8 @@ const ResultsSection = ({
   handleExport,
   handleClear,
 }: ResultsSectionProps) => {
-  const latestResult = results.length ? results[results.length - 1] : null;
+  // ✅ CHANGE HERE: get first item, which is the latest
+  const latestResult = results.length ? results[0] : null;
 
   const handlePDFExport = () => {
     if (!latestResult) return;
@@ -79,13 +79,15 @@ const ResultsSection = ({
 
   const handleLatestExport = () => {
     if (!latestResult) return;
-    
+
     const dataStr = JSON.stringify([latestResult], null, 2);
     const dataBlob = new Blob([dataStr], { type: "application/json" });
     const url = URL.createObjectURL(dataBlob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `saascan-latest-${new Date().toISOString().split("T")[0]}.json`;
+    link.download = `saascan-latest-${
+      new Date().toISOString().split("T")[0]
+    }.json`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
