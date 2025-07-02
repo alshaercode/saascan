@@ -1,26 +1,16 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { useState, useEffect } from "react";
 
-type Language = "en" | "ar";
-
-interface TranslationObject {
+type TranslationObject = {
   [key: string]: string | TranslationObject;
-}
-
-const translations: Record<Language, TranslationObject> = {
-  en: {},
-  ar: {},
 };
+
+let translations: TranslationObject = {};
 
 const loadTranslations = async () => {
   try {
-    const [enTranslations, arTranslations] = await Promise.all([
-      import("../locales/en/common.json"),
-      import("../locales/ar/common.json"),
-    ]);
-
-    translations.en = enTranslations.default;
-    translations.ar = arTranslations.default;
+    const enTranslations = await import("../locales/en/common.json");
+    translations = enTranslations.default;
   } catch (error) {
     console.error("Failed to load translations:", error);
   }
@@ -29,47 +19,23 @@ const loadTranslations = async () => {
 loadTranslations();
 
 export const useI18n = () => {
-  const [language, setLanguage] = useState<Language>("en");
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    const savedLanguage = localStorage.getItem(
-      "ux-analyzer-language"
-    ) as Language;
-    if (savedLanguage && (savedLanguage === "en" || savedLanguage === "ar")) {
-      setLanguage(savedLanguage);
+    if (Object.keys(translations).length > 0) {
+      setIsLoaded(true);
     }
   }, []);
 
-  useEffect(() => {
-    document.documentElement.setAttribute(
-      "dir",
-      language === "ar" ? "rtl" : "ltr"
-    );
-  }, [language]);
-
-  const toggleLanguage = () => {
-    const newLanguage = language === "en" ? "ar" : "en";
-    setLanguage(newLanguage);
-    localStorage.setItem("ux-analyzer-language", newLanguage);
-  };
-
   const t = (key: string, replacements?: Record<string, string>): string => {
     const keys = key.split(".");
-    let value: any = translations[language];
+    let value: any = translations;
 
     for (const k of keys) {
       if (value && typeof value === "object" && k in value) {
         value = value[k];
       } else {
-        value = translations.en;
-        for (const fallbackKey of keys) {
-          if (value && typeof value === "object" && fallbackKey in value) {
-            value = value[fallbackKey];
-          } else {
-            return key;
-          }
-        }
-        break;
+        return key;
       }
     }
 
@@ -89,9 +55,5 @@ export const useI18n = () => {
     return value;
   };
 
-  return {
-    language,
-    toggleLanguage,
-    t,
-  };
+  return { t, isLoaded };
 };

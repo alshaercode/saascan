@@ -1,3 +1,4 @@
+
 "use client";
 import React, { useState } from "react";
 import Navbar from "@/components/Navbar";
@@ -32,7 +33,7 @@ const Index = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
-      <Navbar language="en" onLanguageToggle={() => {}} />
+      <Navbar />
 
       <main className="container mx-auto px-4 py-8 space-y-8 flex-grow">
         <HeroSection />
