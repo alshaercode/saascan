@@ -115,14 +115,6 @@ const ResultsSection = ({
           <Download className="w-4 h-4" />
           Export JSON
         </Button>
-        <Button
-          variant="outline"
-          onClick={handleClear}
-          className="flex items-center gap-2 text-[hsl(var(--score-error))] hover:text-[hsl(var(--score-error))]/80 hover:bg-[hsl(var(--score-error-bg))] transition-colors"
-        >
-          <Trash2 className="w-4 h-4" />
-          Clear
-        </Button>
       </div>
       <SaasAnalysisTable
         results={[latestResult]}
