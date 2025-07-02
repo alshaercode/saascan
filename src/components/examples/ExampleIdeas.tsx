@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Lightbulb, Copy } from "lucide-react";
-
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 
@@ -17,19 +16,22 @@ const ExampleIdeas = ({ onExampleSelect }: ExampleIdeasProps) => {
   const examples = [
     {
       title: "CRM Platform",
-      description: t("examples.crm"),
+      description:
+        "A SaaS customer relationship management tool for sales teams to track leads, deals, and automate follow-ups.",
       category: "Business Tools",
       complexity: "Medium",
     },
     {
       title: "Project Management",
-      description: t("examples.projectManagement"),
+      description:
+        "An online project management app for remote teams with task boards, timelines, and client collaboration.",
       category: "Productivity",
       complexity: "High",
     },
     {
       title: "Analytics Dashboard",
-      description: t("examples.analytics"),
+      description:
+        "A real-time analytics platform to monitor KPIs and generate automated reports for marketing campaigns.",
       category: "Analytics",
       complexity: "Medium",
     },
@@ -39,7 +41,7 @@ const ExampleIdeas = ({ onExampleSelect }: ExampleIdeasProps) => {
     navigator.clipboard.writeText(example);
     toast({
       title: "Example Copied!",
-      description: "The example has been copied to your clipboard",
+      description: "The example has been copied to your clipboard.",
     });
   };
 
@@ -61,7 +63,7 @@ const ExampleIdeas = ({ onExampleSelect }: ExampleIdeasProps) => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-xl">
           <Lightbulb className="w-5 h-5 text-yellow-500" />
-          {t("exampleIdeas")}
+          Example Ideas
         </CardTitle>
       </CardHeader>
       <CardContent>
