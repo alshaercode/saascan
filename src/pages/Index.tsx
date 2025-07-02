@@ -1,4 +1,3 @@
-
 "use client";
 import React, { useState } from "react";
 import Navbar from "@/components/Navbar";
@@ -32,21 +31,14 @@ const Index = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
+    <div className="flex  flex-col min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
       <Navbar />
 
-      <main className="container mx-auto px-4 py-8 space-y-8 flex-grow">
+      <main className=" mx-auto container px-4 py-8 space-y-8 flex-grow">
         <HeroSection />
 
-        <div className="grid grid-cols-1 lg:grid-cols-1 max-w-4xl mx-auto gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-1  mx-auto gap-8">
           <div className="lg:col-span-2 space-y-6">
-            {showOnboarding && (
-              <div className="space-y-6">
-                <OnboardingSteps />
-                <ExampleIdeas onExampleSelect={handleExampleSelect} />
-              </div>
-            )}
-
             <InputAnalysisSection
               input={input}
               setInput={setInput}

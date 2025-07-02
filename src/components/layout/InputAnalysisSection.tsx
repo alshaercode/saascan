@@ -30,7 +30,7 @@ const InputAnalysisSection = ({
 
   return (
     <motion.div 
-      className="grid grid-cols-1 max-w-7xl gap-8 w-full mx-auto"
+      className="grid grid-cols-1  gap-8 w-full mx-auto"
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
