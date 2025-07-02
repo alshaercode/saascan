@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import HistoryPage from "./pages/HistoryPage";
+import Announcement from "./components/layout/Announcement";
 
 const queryClient = new QueryClient();
 
@@ -14,6 +15,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <Announcement />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />

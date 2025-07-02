@@ -1,6 +1,4 @@
 
-@import url("https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap");
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -117,7 +115,7 @@ All colors MUST be HSL.
 @layer base {
   * {
     @apply border-border;
-    font-family: "Noto Kufi Arabic", sans-serif;
+    font-family: 'Chillax', sans-serif;
   }
 
   body {
