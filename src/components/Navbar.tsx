@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Home, History, Github } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -49,7 +48,7 @@ const Navbar = () => {
               size="sm"
               onClick={() =>
                 window.open(
-                  "https://github.com/your-username/saascan",
+                  "https://github.com/balshaer/saascan",
                   "_blank",
                   "noopener noreferrer"
                 )
