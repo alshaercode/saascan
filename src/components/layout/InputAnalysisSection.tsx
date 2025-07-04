@@ -3,14 +3,15 @@ import {
   Card,
   CardHeader,
   CardTitle,
-  CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
+import { EnhancedTextarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Globe, ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 import InputValidation from "@/components/analysis/InputValidation";
 import { motion, AnimatePresence } from "framer-motion";
+import { enhanceSaasIdea } from "@/lib/aiEnhancer";
+import { useToast } from "@/hooks/use-toast";
 
 interface InputAnalysisSectionProps {
   input: string;
@@ -29,6 +30,43 @@ const InputAnalysisSection = ({
   isEnhancing,
 }: InputAnalysisSectionProps) => {
   const [isFocused, setIsFocused] = useState(false);
+  const [isEnhancing, setIsEnhancing] = useState(false);
+  const { toast } = useToast();
+
+  const handleEnhance = async (value: string) => {
+    if (!value.trim()) return;
+
+    setIsEnhancing(true);
+
+    try {
+      const result = await enhanceSaasIdea(value);
+
+      if (result.success) {
+        setInput(result.enhanced);
+        toast({
+          title: "Idea Enhanced!",
+          description: "Your SaaS idea has been enhanced with AI suggestions.",
+        });
+      } else {
+        // Still use the enhanced version even if there was an API error (fallback was used)
+        setInput(result.enhanced);
+        toast({
+          title: "Idea Enhanced",
+          description: "Enhanced using offline suggestions. For better results, check your API configuration.",
+          variant: "default",
+        });
+      }
+    } catch (error) {
+      console.error("Enhancement failed:", error);
+      toast({
+        title: "Enhancement Failed",
+        description: "Unable to enhance your idea. Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsEnhancing(false);
+    }
+  };
 
   return (
     <motion.div
@@ -77,14 +115,25 @@ const InputAnalysisSection = ({
               }}
               className="overflow-hidden"
             >
-              <Textarea
+              <EnhancedTextarea
                 placeholder="Describe your SaaS idea in detail... What problem does it solve? Who is your target audience? What makes it unique?"
                 value={input}
-                onChange={(e) => setInput(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setInput(e.target.value)}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
-                className="h-full text-base border-2 focus:border-[hsl(var(--gradient-primary))] transition-all duration-300 resize-none bg-[hsl(var(--background))]/50 backdrop-blur-sm"
-                disabled={isAnalyzing}
+                onEnhance={handleEnhance}
+                isEnhancing={isEnhancing}
+                showEnhanceButton={!isAnalyzing}
+                enableSmartSuggestions={true}
+                enableUndoFunctionality={true}
+                enableIdeaGenerator={true}
+                autoResize={true}
+                onIdeaGenerated={(idea) => {
+                  // Optional: Add any additional logic when idea is generated
+                  console.log('New idea generated:', idea);
+                }}
+                className="h-full text-base border-2 focus:border-[hsl(var(--gradient-primary))] transition-all duration-300 bg-[hsl(var(--background))]/50 backdrop-blur-sm"
+                disabled={isAnalyzing || isEnhancing}
               />
             </motion.div>
             <AnimatePresence>
@@ -106,7 +155,7 @@ const InputAnalysisSection = ({
             >
               <Button
                 onClick={handleAnalyze}
-                disabled={isAnalyzing || !input.trim() || input.length < 20}
+                disabled={isAnalyzing || isEnhancing || !input.trim() || input.length < 20}
                 size="lg"
                 className="bg-gradient-to-r from-[hsl(var(--gradient-primary))] to-[hsl(var(--gradient-secondary))] hover:from-[hsl(var(--gradient-primary))]/90 hover:to-[hsl(var(--gradient-secondary))]/90 text-white px-12 py-4 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50"
               >
@@ -129,6 +178,22 @@ const InputAnalysisSection = ({
                         }}
                       />
                       <span className="font-semibold">Analyzing...</span>
+                    </motion.div>
+                  ) : isEnhancing ? (
+                    <motion.div
+                      key="enhancing"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="flex items-center gap-3"
+                    >
+                      <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                      >
+                        <Sparkles className="w-5 h-5 text-white" />
+                      </motion.div>
+                      <span className="font-semibold">Enhancing...</span>
                     </motion.div>
                   ) : (
                     <motion.div
