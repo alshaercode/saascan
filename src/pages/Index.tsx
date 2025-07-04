@@ -10,7 +10,7 @@ import InputAnalysisSection from "@/components/layout/InputAnalysisSection";
 import EmptyStateSection from "@/components/layout/EmptyStateSection";
 import SkeletonLoader from "@/components/analysis/SkeletonLoader";
 import ProgressIndicator from "@/components/analysis/ProgressIndicator";
-import ComprehensiveAnalysisTable from "@/components/ComprehensiveAnalysisTable";
+import AnalysisDataTable from "@/components/AnalysisDataTable";
 
 // Animation variants for smooth transitions
 const fadeInUp = {
@@ -111,7 +111,7 @@ const Index = () => {
                   animate="animate"
                   exit="exit"
                 >
-                  <ComprehensiveAnalysisTable
+                  <AnalysisDataTable
                     results={results}
                     language="en"
                     onExport={handleExport}

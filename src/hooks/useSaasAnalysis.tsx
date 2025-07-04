@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 import type { AnalysisResult } from "@/lib/uxAnalyzer";
-import { SAAS_ANALYSIS_PROMPT } from "@/lib/analysisPrompt";
+import { COMPREHENSIVE_SAAS_ANALYSIS_PROMPT } from "@/config/analysisPrompts";
 import {
   saveToLocalStorage,
   loadFromLocalStorage,
@@ -127,8 +127,11 @@ const useSaasAnalysis = (language: string) => {
         return;
       }
 
-      // Insert the input into our massive analysis prompt
-      const prompt = SAAS_ANALYSIS_PROMPT.replace("{INPUT}", input);
+      // Insert the input into our comprehensive analysis prompt
+      const prompt = COMPREHENSIVE_SAAS_ANALYSIS_PROMPT.replace(
+        "{SAAS_CONCEPT}",
+        input
+      );
 
       const response = await fetch(
         `${apiConfig.gemini.baseUrl}/${apiConfig.gemini.model}:generateContent?key=${GEMINI_API_KEY}`,

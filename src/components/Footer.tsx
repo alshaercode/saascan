@@ -17,7 +17,7 @@ const Footer = () => {
         {/* Contribution and credit links */}
         <div className="flex gap-6 text-sm text-[hsl(var(--footer-text-secondary))] justify-center sm:justify-end">
           <a
-            href="https://github.com/your-github-repo"
+            href="https://github.com/balshaer/saascan"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1 hover:underline"
