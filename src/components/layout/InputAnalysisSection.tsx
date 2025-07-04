@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   Card,
@@ -18,6 +17,8 @@ interface InputAnalysisSectionProps {
   setInput: (value: string) => void;
   isAnalyzing: boolean;
   handleAnalyze: () => void;
+  isEnhancing: boolean;
+  handleEnhancePrompt: () => void;
 }
 
 const InputAnalysisSection = ({
@@ -25,11 +26,12 @@ const InputAnalysisSection = ({
   setInput,
   isAnalyzing,
   handleAnalyze,
+  isEnhancing,
 }: InputAnalysisSectionProps) => {
   const [isFocused, setIsFocused] = useState(false);
 
   return (
-    <motion.div 
+    <motion.div
       className="grid grid-cols-1  gap-8 w-full mx-auto"
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
@@ -37,10 +39,10 @@ const InputAnalysisSection = ({
     >
       <Card className="shadow-xl border-0 bg-[hsl(var(--card-bg))]/80 backdrop-blur-md overflow-hidden">
         <motion.div
-          animate={{ 
-            background: isFocused 
+          animate={{
+            background: isFocused
               ? "linear-gradient(135deg, hsl(var(--gradient-primary))/5, hsl(var(--gradient-secondary))/5)"
-              : "transparent"
+              : "transparent",
           }}
           transition={{ duration: 0.3 }}
           className="absolute inset-0 pointer-events-none"
@@ -110,22 +112,26 @@ const InputAnalysisSection = ({
               >
                 <AnimatePresence mode="wait">
                   {isAnalyzing ? (
-                    <motion.div 
+                    <motion.div
                       key="analyzing"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       className="flex items-center gap-3"
                     >
-                      <motion.div 
+                      <motion.div
                         className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
                         animate={{ rotate: 360 }}
-                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                        transition={{
+                          duration: 1,
+                          repeat: Infinity,
+                          ease: "linear",
+                        }}
                       />
                       <span className="font-semibold">Analyzing...</span>
                     </motion.div>
                   ) : (
-                    <motion.div 
+                    <motion.div
                       key="analyze"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}

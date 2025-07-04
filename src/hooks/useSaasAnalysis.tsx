@@ -1,8 +1,7 @@
-
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import type { AnalysisResult } from "@/lib/uxAnalyzer";
-import { SAAS_ANALYSIS_PROMPT } from "@/lib/analysisPrompt";
+import { SAAS_ANALYSIS_PROMPT } from "@/lib/analysisPrompt"; // This now contains your 1000-line super detailed prompt
 
 const useSaasAnalysis = (language: string) => {
   const [input, setInput] = useState("");
@@ -11,9 +10,7 @@ const useSaasAnalysis = (language: string) => {
   const { toast } = useToast();
 
   useEffect(() => {
-    const saved = JSON.parse(
-      localStorage.getItem("saascanResults") || "[]"
-    );
+    const saved = JSON.parse(localStorage.getItem("saascanResults") || "[]");
     if (Array.isArray(saved) && saved.length > 0) setResults(saved);
   }, []);
 
@@ -30,14 +27,12 @@ const useSaasAnalysis = (language: string) => {
     setIsAnalyzing(true);
 
     try {
-      // Get API key from environment
       const GEMINI_API_KEY =
         import.meta.env.VITE_GEMINI_API_KEY ||
         process.env.REACT_APP_GEMINI_API_KEY ||
         "AIzaSyACk_TwCNngF9-vYxtUjkIq51ugGr4BY9Y";
 
       if (!GEMINI_API_KEY) {
-        // If no API key, use the mock analyzer as fallback
         console.log("No API key found, using mock analysis");
         const { analyzeUX } = await import("@/lib/uxAnalyzer");
         const mockResult = analyzeUX(input, "en");
@@ -52,10 +47,7 @@ const useSaasAnalysis = (language: string) => {
 
         const updatedResults = [newResult, ...results];
         setResults(updatedResults);
-        localStorage.setItem(
-          "saascanResults",
-          JSON.stringify(updatedResults)
-        );
+        localStorage.setItem("saascanResults", JSON.stringify(updatedResults));
         setInput("");
 
         toast({
@@ -65,6 +57,7 @@ const useSaasAnalysis = (language: string) => {
         return;
       }
 
+      // Insert the input into our massive analysis prompt
       const prompt = SAAS_ANALYSIS_PROMPT.replace("{INPUT}", input);
 
       const response = await fetch(
@@ -88,7 +81,7 @@ const useSaasAnalysis = (language: string) => {
               temperature: 0.3,
               topK: 1,
               topP: 0.8,
-              maxOutputTokens: 2048,
+              maxOutputTokens: 4096, // Increased to accommodate bigger response from longer prompt
             },
             safetySettings: [
               {
@@ -128,12 +121,10 @@ const useSaasAnalysis = (language: string) => {
 
       let parsed: Partial<AnalysisResult> = {};
       try {
-        // Clean the response to extract JSON
-        const cleanContent = content.replace(/```json\n?|\n?```/g, '').trim();
+        const cleanContent = content.replace(/```json\n?|\n?```/g, "").trim();
         parsed = JSON.parse(cleanContent);
       } catch (parseError) {
         console.error("Failed to parse Gemini response:", content);
-        // Fallback to mock analysis if parsing fails
         const { analyzeUX } = await import("@/lib/uxAnalyzer");
         parsed = analyzeUX(input, "en");
       }
@@ -157,10 +148,7 @@ const useSaasAnalysis = (language: string) => {
 
       const updatedResults = [newResult, ...results];
       setResults(updatedResults);
-      localStorage.setItem(
-        "saascanResults",
-        JSON.stringify(updatedResults)
-      );
+      localStorage.setItem("saascanResults", JSON.stringify(updatedResults));
       setInput("");
 
       toast({
