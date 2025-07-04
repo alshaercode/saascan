@@ -1,9 +1,100 @@
+export interface Risk {
+  category: "Market" | "Technical" | "Financial" | "Execution";
+  risk: string;
+  probability: "Low" | "Medium" | "High";
+  impact: "Low" | "Medium" | "High";
+  mitigation: string;
+}
+
+export interface Opportunity {
+  area: "Market" | "Product" | "Technology" | "Business Model";
+  opportunity: string;
+  potential_impact: string;
+  effort_required: "Low" | "Medium" | "High";
+}
+
+export interface ValidationExperiment {
+  experiment: string;
+  cost: string;
+  timeline: string;
+  success_criteria: string;
+  learning_goal: string;
+}
+
+export interface Recommendation {
+  priority: "High" | "Medium" | "Low";
+  action: string;
+  rationale: string;
+  timeline: string;
+  resources_needed: string;
+}
+
+export interface Competitor {
+  name: string;
+  type: "Direct" | "Indirect" | "Substitute";
+  market_share: string;
+  differentiation: string;
+  switching_cost: "Low" | "Medium" | "High";
+}
+
 export interface AnalysisResult {
   id: string;
   input: string;
   score: number;
-  issues: string[];
-  recommendations: string[];
+  validity?: "Realistic" | "Promising" | "Weak" | "High-Risk";
+  summary?: string;
+
+  // Legacy fields for backward compatibility
+  issues?: string[];
+  recommendations?: string[];
+
+  // Enhanced structured data
+  market?: {
+    pain_severity?: "Critical" | "High" | "Medium" | "Low";
+    pain_description?: string;
+    buyer_personas?: string[];
+    tam_estimate?: string;
+    market_timing?: string;
+    competitive_pressure?: string;
+  };
+
+  user_experience?: {
+    complexity_level?: "Simple" | "Moderate" | "Complex";
+    user_journey_quality?: "Smooth" | "Acceptable" | "Problematic";
+    onboarding_difficulty?: "Easy" | "Medium" | "Hard";
+    learning_curve?: "Minimal" | "Moderate" | "Steep";
+    accessibility_score?: number;
+    mobile_readiness?: "Native" | "Responsive" | "Desktop-only";
+  };
+
+  financials?: {
+    pricing_model?: string;
+    arpu_range?: string;
+    cac_estimate?: string;
+    ltv_projection?: string;
+    ltv_cac_ratio?: string;
+    payback_period?: string;
+    gross_margin?: string;
+    churn_rate?: string;
+  };
+
+  technical?: {
+    tech_stack?: string[];
+    complexity_rating?: "Low" | "Medium" | "High" | "Very High";
+    mvp_time_months?: number;
+    team_size_needed?: number;
+    development_cost?: string;
+    scalability_concerns?: string[];
+    security_requirements?: string[];
+    integration_complexity?: "Simple" | "Moderate" | "Complex";
+  };
+
+  competition?: Competitor[];
+  risks?: Risk[];
+  opportunities?: Opportunity[];
+  validation_experiments?: ValidationExperiment[];
+  structured_recommendations?: Recommendation[];
+
   timestamp: string;
   language: "en" | "ar";
 }

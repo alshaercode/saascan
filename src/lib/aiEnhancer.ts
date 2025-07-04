@@ -55,7 +55,9 @@ export interface EnhancementResult {
   error?: string;
 }
 
-export const enhanceSaasIdea = async (input: string): Promise<EnhancementResult> => {
+export const enhanceSaasIdea = async (
+  input: string
+): Promise<EnhancementResult> => {
   try {
     // Get API key from environment
     const GEMINI_API_KEY =
@@ -68,7 +70,7 @@ export const enhanceSaasIdea = async (input: string): Promise<EnhancementResult>
       const fallbackEnhanced = generateFallbackEnhancement(input);
       return {
         enhanced: fallbackEnhanced,
-        success: true
+        success: true,
       };
     }
 
@@ -135,27 +137,26 @@ export const enhanceSaasIdea = async (input: string): Promise<EnhancementResult>
 
     // Clean the response to remove any markdown formatting or prefixes
     const cleanContent = content
-      .replace(/```[\s\S]*?```/g, '') // Remove code blocks
-      .replace(/^#+\s.*$/gm, '') // Remove markdown headers
-      .replace(/^\*\*.*\*\*$/gm, '') // Remove bold headers
-      .replace(/^-\s/gm, '') // Remove bullet points
+      .replace(/```[\s\S]*?```/g, "") // Remove code blocks
+      .replace(/^#+\s.*$/gm, "") // Remove markdown headers
+      .replace(/^\*\*.*\*\*$/gm, "") // Remove bold headers
+      .replace(/^-\s/gm, "") // Remove bullet points
       .trim();
 
     return {
       enhanced: cleanContent,
-      success: true
+      success: true,
     };
-
   } catch (error) {
     console.error("Enhancement error:", error);
-    
+
     // Fallback to local enhancement
     const fallbackEnhanced = generateFallbackEnhancement(input);
-    
+
     return {
       enhanced: fallbackEnhanced,
       success: false,
-      error: error instanceof Error ? error.message : "Unknown error occurred"
+      error: error instanceof Error ? error.message : "Unknown error occurred",
     };
   }
 };
@@ -197,7 +198,7 @@ const FALLBACK_SAAS_IDEAS = [
 
   "An all-in-one event management platform that handles registration, ticketing, networking facilitation, and post-event analytics, specifically designed for professional conferences and corporate events.",
 
-  "A code review and collaboration tool that uses machine learning to identify potential bugs, security vulnerabilities, and performance issues while facilitating seamless team code reviews and knowledge sharing."
+  "A code review and collaboration tool that uses machine learning to identify potential bugs, security vulnerabilities, and performance issues while facilitating seamless team code reviews and knowledge sharing.",
 ];
 
 export interface IdeaGenerationResult {
@@ -206,24 +207,28 @@ export interface IdeaGenerationResult {
   error?: string;
 }
 
-export const generateRandomSaasIdea = async (): Promise<IdeaGenerationResult> => {
-  try {
-    // Get API key from environment
-    const GEMINI_API_KEY =
-      import.meta.env.VITE_GEMINI_API_KEY ||
-      process.env.REACT_APP_GEMINI_API_KEY ||
-      "AIzaSyACk_TwCNngF9-vYxtUjkIq51ugGr4BY9Y";
+export const generateRandomSaasIdea =
+  async (): Promise<IdeaGenerationResult> => {
+    try {
+      // Get API key from environment
+      const GEMINI_API_KEY =
+        import.meta.env.VITE_GEMINI_API_KEY ||
+        process.env.REACT_APP_GEMINI_API_KEY ||
+        "AIzaSyACk_TwCNngF9-vYxtUjkIq51ugGr4BY9Y";
 
-    if (!GEMINI_API_KEY) {
-      // Use fallback ideas when no API key is available
-      const randomIdea = FALLBACK_SAAS_IDEAS[Math.floor(Math.random() * FALLBACK_SAAS_IDEAS.length)];
-      return {
-        idea: randomIdea,
-        success: true
-      };
-    }
+      if (!GEMINI_API_KEY) {
+        // Use fallback ideas when no API key is available
+        const randomIdea =
+          FALLBACK_SAAS_IDEAS[
+            Math.floor(Math.random() * FALLBACK_SAAS_IDEAS.length)
+          ];
+        return {
+          idea: randomIdea,
+          success: true,
+        };
+      }
 
-    const prompt = `Generate a unique, realistic SaaS business idea that addresses a genuine market need. The idea should be:
+      const prompt = `Generate a unique, realistic SaaS business idea that addresses a genuine market need. The idea should be:
 
 1. Specific and actionable (not generic)
 2. Focused on a clear target market
@@ -242,84 +247,87 @@ Examples of good ideas:
 
 Generate ONE unique SaaS idea following this format. Return only the idea description, no additional text or formatting.`;
 
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                {
-                  text: prompt,
-                },
-              ],
-            },
-          ],
-          generationConfig: {
-            temperature: 0.8,
-            topK: 40,
-            topP: 0.9,
-            maxOutputTokens: 200,
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
           },
-          safetySettings: [
-            {
-              category: "HARM_CATEGORY_HARASSMENT",
-              threshold: "BLOCK_MEDIUM_AND_ABOVE",
+          body: JSON.stringify({
+            contents: [
+              {
+                parts: [
+                  {
+                    text: prompt,
+                  },
+                ],
+              },
+            ],
+            generationConfig: {
+              temperature: 0.8,
+              topK: 40,
+              topP: 0.9,
+              maxOutputTokens: 200,
             },
-            {
-              category: "HARM_CATEGORY_HATE_SPEECH",
-              threshold: "BLOCK_MEDIUM_AND_ABOVE",
-            },
-            {
-              category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-              threshold: "BLOCK_MEDIUM_AND_ABOVE",
-            },
-            {
-              category: "HARM_CATEGORY_DANGEROUS_CONTENT",
-              threshold: "BLOCK_MEDIUM_AND_ABOVE",
-            },
-          ],
-        }),
+            safetySettings: [
+              {
+                category: "HARM_CATEGORY_HARASSMENT",
+                threshold: "BLOCK_MEDIUM_AND_ABOVE",
+              },
+              {
+                category: "HARM_CATEGORY_HATE_SPEECH",
+                threshold: "BLOCK_MEDIUM_AND_ABOVE",
+              },
+              {
+                category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+                threshold: "BLOCK_MEDIUM_AND_ABOVE",
+              },
+              {
+                category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+                threshold: "BLOCK_MEDIUM_AND_ABOVE",
+              },
+            ],
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Gemini API Error: ${response.status}`);
       }
-    );
 
-    if (!response.ok) {
-      throw new Error(`Gemini API Error: ${response.status}`);
+      const data = await response.json();
+      const content = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+      if (!content) {
+        throw new Error("No response content received from Gemini API");
+      }
+
+      // Clean the response
+      const cleanContent = content
+        .replace(/```[\s\S]*?```/g, "") // Remove code blocks
+        .replace(/^#+\s.*$/gm, "") // Remove markdown headers
+        .replace(/^\*\*.*\*\*$/gm, "") // Remove bold headers
+        .trim();
+
+      return {
+        idea: cleanContent,
+        success: true,
+      };
+    } catch (error) {
+      console.error("Idea generation error:", error);
+
+      // Fallback to random idea from array
+      const randomIdea =
+        FALLBACK_SAAS_IDEAS[
+          Math.floor(Math.random() * FALLBACK_SAAS_IDEAS.length)
+        ];
+
+      return {
+        idea: randomIdea,
+        success: false,
+        error:
+          error instanceof Error ? error.message : "Unknown error occurred",
+      };
     }
-
-    const data = await response.json();
-    const content = data.candidates?.[0]?.content?.parts?.[0]?.text;
-
-    if (!content) {
-      throw new Error("No response content received from Gemini API");
-    }
-
-    // Clean the response
-    const cleanContent = content
-      .replace(/```[\s\S]*?```/g, '') // Remove code blocks
-      .replace(/^#+\s.*$/gm, '') // Remove markdown headers
-      .replace(/^\*\*.*\*\*$/gm, '') // Remove bold headers
-      .trim();
-
-    return {
-      idea: cleanContent,
-      success: true
-    };
-
-  } catch (error) {
-    console.error("Idea generation error:", error);
-
-    // Fallback to random idea from array
-    const randomIdea = FALLBACK_SAAS_IDEAS[Math.floor(Math.random() * FALLBACK_SAAS_IDEAS.length)];
-
-    return {
-      idea: randomIdea,
-      success: false,
-      error: error instanceof Error ? error.message : "Unknown error occurred"
-    };
-  }
-};
+  };

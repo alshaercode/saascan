@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -9,92 +10,27 @@ import InputAnalysisSection from "@/components/layout/InputAnalysisSection";
 import EmptyStateSection from "@/components/layout/EmptyStateSection";
 import SkeletonLoader from "@/components/analysis/SkeletonLoader";
 import ProgressIndicator from "@/components/analysis/ProgressIndicator";
+import ComprehensiveAnalysisTable from "@/components/ComprehensiveAnalysisTable";
 
-const LastSaasDetailTable = ({ result, handleExport, handleClear }) => {
-  return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold">Latest SaaS Analysis Report</h2>
-        <div className="space-x-2">
-          <button
-            onClick={handleExport}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          >
-            Export JSON
-          </button>
-          <button
-            onClick={handleClear}
-            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-          >
-            Clear
-          </button>
-        </div>
-      </div>
-      <div className="overflow-x-auto border rounded-lg shadow-sm">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-700 uppercase">
-                Input
-              </th>
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-700 uppercase">
-                Score
-              </th>
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-700 uppercase">
-                Validity
-              </th>
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-700 uppercase">
-                Issues
-              </th>
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-700 uppercase">
-                Recommendations
-              </th>
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-700 uppercase">
-                Timestamp
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            <tr>
-              <td
-                className="px-4 py-2 text-sm text-gray-900 max-w-xs break-words"
-                title={result.input}
-              >
-                {result.input}
-              </td>
-              <td className="px-4 py-2 text-sm text-gray-900">
-                {result.score}
-              </td>
-              <td className="px-4 py-2 text-sm text-gray-900">
-                {result.validity || "N/A"}
-              </td>
-              <td className="px-4 py-2 text-sm text-gray-600">
-                <ul className="list-disc list-inside space-y-1">
-                  {result.issues?.map((issue, idx) => (
-                    <li key={idx}>{issue}</li>
-                  )) || <li>No issues found</li>}
-                </ul>
-              </td>
-              <td className="px-4 py-2 text-sm text-gray-600">
-                <ul className="list-disc list-inside space-y-1">
-                  {result.recommendations?.map((rec, idx) => (
-                    <li key={idx}>{rec}</li>
-                  )) || <li>No recommendations</li>}
-                </ul>
-              </td>
-              <td className="px-4 py-2 text-sm text-gray-500">
-                {new Date(result.timestamp).toLocaleString()}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
+// Animation variants for smooth transitions
+const fadeInUp = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -20 },
+  transition: { duration: 0.3 },
+};
+
+const staggerContainer = {
+  animate: {
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
 };
 
 const Index = () => {
   const [showOnboarding, setShowOnboarding] = useState(true);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
   const {
     input,
     setInput,
@@ -105,42 +41,100 @@ const Index = () => {
     handleClear,
   } = useSaasAnalysis("en");
 
-  const lastResult = results[0]; // always show last result
+  // Handle first load animation
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsFirstLoad(false);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Auto-hide onboarding when user starts typing
+  useEffect(() => {
+    if (input.trim().length > 0) {
+      setShowOnboarding(false);
+    }
+  }, [input]);
+
+  const hasResults = results.length > 0;
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
       <Navbar />
 
-      <main className="container mx-auto px-4 py-8 space-y-8 flex-grow">
-        <HeroSection />
+      <motion.main
+        className="container mx-auto px-4 py-8 space-y-8 flex-grow"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <motion.div variants={fadeInUp} initial="initial" animate="animate">
+          <HeroSection />
+        </motion.div>
 
-        <div className="grid grid-cols-1 gap-8">
+        <motion.div
+          className="grid grid-cols-1 gap-8"
+          variants={staggerContainer}
+          initial="initial"
+          animate="animate"
+        >
           <div className="space-y-6">
-            <InputAnalysisSection
-              input={input}
-              setInput={setInput}
-              isAnalyzing={isAnalyzing}
-              handleAnalyze={handleAnalyze}
-            />
-
-            <ProgressIndicator isAnalyzing={isAnalyzing} />
-
-            {isAnalyzing && <SkeletonLoader />}
-
-            {lastResult && !isAnalyzing && (
-              <LastSaasDetailTable
-                result={lastResult}
-                handleExport={handleExport}
-                handleClear={handleClear}
+            <motion.div variants={fadeInUp}>
+              <InputAnalysisSection
+                input={input}
+                setInput={setInput}
+                isAnalyzing={isAnalyzing}
+                handleAnalyze={handleAnalyze}
               />
-            )}
+            </motion.div>
 
-            {!lastResult && !isAnalyzing && !showOnboarding && (
-              <EmptyStateSection />
-            )}
+            <AnimatePresence>
+              {isAnalyzing && (
+                <motion.div
+                  variants={fadeInUp}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                >
+                  <ProgressIndicator isAnalyzing={isAnalyzing} />
+                  <SkeletonLoader />
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <AnimatePresence mode="wait">
+              {hasResults && !isAnalyzing && (
+                <motion.div
+                  key="results"
+                  variants={fadeInUp}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                >
+                  <ComprehensiveAnalysisTable
+                    results={results}
+                    language="en"
+                    onExport={handleExport}
+                    onClear={handleClear}
+                  />
+                </motion.div>
+              )}
+
+              {!hasResults && !isAnalyzing && !showOnboarding && (
+                <motion.div
+                  key="empty"
+                  variants={fadeInUp}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                >
+                  <EmptyStateSection />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
-        </div>
-      </main>
+        </motion.div>
+      </motion.main>
 
       <Footer />
     </div>

@@ -1,21 +1,86 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 import type { AnalysisResult } from "@/lib/uxAnalyzer";
-import { SAAS_ANALYSIS_PROMPT } from "@/lib/analysisPrompt"; // This now contains your 1000-line super detailed prompt
+import { SAAS_ANALYSIS_PROMPT } from "@/lib/analysisPrompt";
+import {
+  saveToLocalStorage,
+  loadFromLocalStorage,
+  loadUserPreferences,
+  saveUserPreferences,
+  setCache,
+  getCachedData,
+} from "@/lib/storage";
+import {
+  measureAnalysisTime,
+  trackUserAction,
+  trackError,
+} from "@/lib/performance";
+import { getGeminiApiKey, getApiConfig, isDevelopment } from "@/lib/config";
 
 const useSaasAnalysis = (language: string) => {
   const [input, setInput] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [results, setResults] = useState<AnalysisResult[]>([]);
+  const [preferences, setPreferences] = useState(loadUserPreferences());
   const { toast } = useToast();
 
+  // Load data on mount with enhanced error handling
   useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem("saascanResults") || "[]");
-    if (Array.isArray(saved) && saved.length > 0) setResults(saved);
-  }, []);
+    try {
+      const savedResults = loadFromLocalStorage();
+      if (savedResults.length > 0) {
+        setResults(savedResults);
+      }
+
+      // Load user preferences
+      const userPrefs = loadUserPreferences();
+      setPreferences(userPrefs);
+
+      // Auto-save preference
+      if (userPrefs.autoSave) {
+        console.log("Auto-save enabled");
+      }
+    } catch (error) {
+      console.error("Failed to load initial data:", error);
+      toast({
+        title: "Loading Error",
+        description: "Some data couldn't be loaded. Starting fresh.",
+        variant: "destructive",
+      });
+    }
+  }, [toast]);
+
+  // Enhanced save function with preferences
+  const saveResults = useCallback(
+    (newResults: AnalysisResult[]) => {
+      try {
+        const success = saveToLocalStorage(newResults);
+        if (!success) {
+          throw new Error("Failed to save to localStorage");
+        }
+        setResults(newResults);
+
+        if (preferences.notifications) {
+          toast({
+            title: "Data Saved",
+            description: "Your analysis has been saved successfully",
+          });
+        }
+      } catch (error) {
+        console.error("Failed to save results:", error);
+        toast({
+          title: "Save Error",
+          description: "Failed to save your analysis. Please try again.",
+          variant: "destructive",
+        });
+      }
+    },
+    [preferences.notifications, toast]
+  );
 
   const handleAnalyze = async () => {
     if (!input.trim()) {
+      trackUserAction("analysis_attempted_empty_input");
       toast({
         title: "Input Required",
         description: "Please enter your SaaS idea to analyze",
@@ -25,14 +90,18 @@ const useSaasAnalysis = (language: string) => {
     }
 
     setIsAnalyzing(true);
+    const endTiming = measureAnalysisTime();
+    trackUserAction("analysis_started", {
+      inputLength: input.length.toString(),
+    });
 
     try {
-      const GEMINI_API_KEY =
-        import.meta.env.VITE_GEMINI_API_KEY ||
-        process.env.REACT_APP_GEMINI_API_KEY ||
-        "AIzaSyACk_TwCNngF9-vYxtUjkIq51ugGr4BY9Y";
+      const apiConfig = getApiConfig();
+      let GEMINI_API_KEY: string;
 
-      if (!GEMINI_API_KEY) {
+      try {
+        GEMINI_API_KEY = getGeminiApiKey();
+      } catch (error) {
         console.log("No API key found, using mock analysis");
         const { analyzeUX } = await import("@/lib/uxAnalyzer");
         const mockResult = analyzeUX(input, "en");
@@ -46,9 +115,10 @@ const useSaasAnalysis = (language: string) => {
         };
 
         const updatedResults = [newResult, ...results];
-        setResults(updatedResults);
-        localStorage.setItem("saascanResults", JSON.stringify(updatedResults));
+        saveResults(updatedResults);
         setInput("");
+        endTiming();
+        trackUserAction("analysis_completed_mock");
 
         toast({
           title: "Analysis Complete",
@@ -61,7 +131,7 @@ const useSaasAnalysis = (language: string) => {
       const prompt = SAAS_ANALYSIS_PROMPT.replace("{INPUT}", input);
 
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`,
+        `${apiConfig.gemini.baseUrl}/${apiConfig.gemini.model}:generateContent?key=${GEMINI_API_KEY}`,
         {
           method: "POST",
           headers: {
@@ -78,10 +148,10 @@ const useSaasAnalysis = (language: string) => {
               },
             ],
             generationConfig: {
-              temperature: 0.3,
-              topK: 1,
-              topP: 0.8,
-              maxOutputTokens: 4096, // Increased to accommodate bigger response from longer prompt
+              temperature: apiConfig.gemini.temperature,
+              topK: apiConfig.gemini.topK,
+              topP: apiConfig.gemini.topP,
+              maxOutputTokens: apiConfig.gemini.maxTokens,
             },
             safetySettings: [
               {
@@ -147,9 +217,13 @@ const useSaasAnalysis = (language: string) => {
       };
 
       const updatedResults = [newResult, ...results];
-      setResults(updatedResults);
-      localStorage.setItem("saascanResults", JSON.stringify(updatedResults));
+      saveResults(updatedResults);
       setInput("");
+      endTiming();
+      trackUserAction("analysis_completed_api", {
+        score: newResult.score.toString(),
+        validity: newResult.validity || "unknown",
+      });
 
       toast({
         title: "Analysis Complete",
@@ -157,6 +231,12 @@ const useSaasAnalysis = (language: string) => {
       });
     } catch (error) {
       console.error("Scan error:", error);
+      endTiming();
+      trackError("analysis_failed", {
+        errorType: error instanceof Error ? error.name : "unknown",
+        errorMessage: error instanceof Error ? error.message : "unknown",
+      });
+
       toast({
         title: "Analysis Error",
         description:
@@ -190,23 +270,61 @@ const useSaasAnalysis = (language: string) => {
     });
   };
 
-  const handleClear = () => {
-    setResults([]);
-    localStorage.removeItem("saascanResults");
-    toast({
-      title: "History Cleared",
-      description: "All analysis results have been cleared",
-    });
-  };
+  const handleClear = useCallback(() => {
+    try {
+      setResults([]);
+      saveToLocalStorage([]);
+      toast({
+        title: "History Cleared",
+        description: "All analysis results have been cleared",
+      });
+    } catch (error) {
+      console.error("Failed to clear results:", error);
+      toast({
+        title: "Clear Error",
+        description: "Failed to clear analysis history",
+        variant: "destructive",
+      });
+    }
+  }, [toast]);
+
+  // Update user preferences
+  const updatePreferences = useCallback(
+    (newPrefs: Partial<typeof preferences>) => {
+      try {
+        const updatedPrefs = { ...preferences, ...newPrefs };
+        setPreferences(updatedPrefs);
+        saveUserPreferences(updatedPrefs);
+
+        if (preferences.notifications) {
+          toast({
+            title: "Preferences Updated",
+            description: "Your settings have been saved",
+          });
+        }
+      } catch (error) {
+        console.error("Failed to update preferences:", error);
+        toast({
+          title: "Settings Error",
+          description: "Failed to save your preferences",
+          variant: "destructive",
+        });
+      }
+    },
+    [preferences, toast]
+  );
 
   return {
     input,
     setInput,
     isAnalyzing,
     results,
+    preferences,
     handleAnalyze,
     handleExport,
     handleClear,
+    updatePreferences,
+    saveResults,
   };
 };
 
